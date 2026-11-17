@@ -29,11 +29,9 @@ add_library(cdrom OBJECT
     cdrom_image.c
     cdrom_image_viso.c
     cdrom_image_writable.c
-    cdrom_mitsumi.c
     cdrom_mke.c
     cdrom_hitachi.c
     cdrom_philips.c
-    cdrom_sony.c
     cdrom_cm153.c
     cm100.c
     cm100_protocol.c

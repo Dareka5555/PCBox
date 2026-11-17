@@ -38,10 +38,8 @@
 #include <86box/cdrom_image.h>
 #include <86box/cdrom_image_writable.h>
 #include <86box/cdrom_interface.h>
-#include <86box/cdrom_mitsumi.h>
 #include <86box/cdrom_hitachi.h>
 #include <86box/cdrom_philips.h>
-#include <86box/cdrom_sony.h>
 #include <86box/cdrom_cm153.h>
 #include <86box/cdrom_mke.h>
 #include <86box/crc.h>
@@ -155,10 +153,7 @@ static const struct {
     { &mke_cdrom_device             },
     { &philips_cm153_device         },
     { &philips_cm250_device         },
-    { &sony_cdu31a_device           },
-    { &sony_creative_device         },
     { &teac_cdrom_device            },
-    { &mitsumi_cdrom_device         },
     { &teac_cdrom_16bit_device      },
     { &hitachi_cdrom_mca_device     },
     { NULL                          }
@@ -1261,17 +1256,9 @@ cdrom_toc_dump(cdrom_t *dev)
 void
 cdrom_interface_reset(void)
 {
-    /* On a Tandy VIS machine, add the Mitsumi controller; it has no ISA slots
-       for another one, and that one would clash with it at 0x310. */
-    if (machines[machine].init == machine_at_tandy_vis_init)
-        device_add(&mitsumi_cdrom_vis_device);
     /* If we have a valid controller, add its device. */
-    else  if ((cdrom_interface_current > 0) &&
-             controllers[cdrom_interface_current].device)
+    if ((cdrom_interface_current > 0) && controllers[cdrom_interface_current].device)
         device_add(controllers[cdrom_interface_current].device);
-
-    /* Mitsumi drives no card took go to the parallel port BackPacks. */
-    lpt_bpmcd_attach_drives();
 }
 
 const char *
@@ -2573,51 +2560,7 @@ cdrom_read_toc_sony(const cdrom_t *dev, uint8_t *b, const uint8_t start_track,
     return len;
 }
 
-/* New API calls for Mitsumi CD-ROM. */
-void
-cdrom_get_track_buffer(cdrom_t *dev, uint8_t *buf)
-{
-    uint8_t           rti[65536]  = { 0 };
-    raw_track_info_t *trti        = (raw_track_info_t *) rti;
-    int               num         = 0;
-    int               first       = -1;
-    int               last        = -1;
-
-    if (dev != NULL)
-        dev->ops->get_raw_track_info(dev->local, &num, rti);
-
-    if (num > 0) {
-        first = find_track(trti, num, 1);
-        last = find_track(trti, num, 0);
-    }
-
-    if (first != -1) {
-        buf[0] = trti[first].point;
-        buf[2] = trti[first].pm;
-        buf[3] = trti[first].ps;
-        buf[4] = trti[first].pf;
-    } else {
-        buf[0] = 0x01;
-        buf[2] = 0x00;
-        buf[3] = 0x02;
-        buf[4] = 0x00;
-    }
-
-    if (last != -1) {
-        buf[1] = trti[last].point;
-        buf[5] = trti[last].pm;
-        buf[6] = trti[last].ps;
-        buf[7] = trti[last].pf;
-    } else {
-        buf[1] = 0x01;
-        buf[5] = 0x00;
-        buf[6] = 0x02;
-        buf[7] = 0x00;
-    }
-
-    buf[8] = 0x00;
-}
-
+/* CD-ROM subchannel APIs. */
 int
 cdrom_get_q(cdrom_t *dev, uint8_t *buf, int curtoctrk, uint8_t mode)
 {
@@ -3951,42 +3894,6 @@ void
 cdrom_hard_reset(void)
 {
     cdrom_assigned_letters = 0;
-
-#ifndef IS_TEST
-    if (machines[machine].init == machine_at_tandy_vis_init) {
-        bool mitsumi_bus_found = false;
-        /* Ensure there's at least one Mitsumi bus type used. */
-        for (uint8_t i = 0; i < CDROM_NUM; i++) {
-            if (cdrom[i].bus_type == CDROM_BUS_MITSUMI) {
-                mitsumi_bus_found = true;
-                break;
-            }
-        }
-        if (!mitsumi_bus_found) {
-            bool mitsumi_bus_enabled = false;
-            for (uint8_t i = 0; i < CDROM_NUM; i++) {
-                if (!cdrom[i].bus_type) {
-                    mitsumi_bus_enabled = true;
-                    cdrom[i].bus_type = CDROM_BUS_MITSUMI;
-                    break;
-                }
-            }
-            if (!mitsumi_bus_enabled) {                
-                cdrom[0].priv        = NULL;
-                cdrom[0].ops         = NULL;
-                cdrom[0].local       = NULL;
-                cdrom[0].insert      = NULL;
-                cdrom[0].close       = NULL;
-                cdrom[0].get_volume  = NULL;
-                cdrom[0].get_channel = NULL;
-                cdrom[0].bus_type    = CDROM_BUS_MITSUMI;
-                cdrom[0].res         = 0;
-                cdrom[0].speed       = 2;
-                cdrom[0].type        = 0;
-            }
-        }
-    }
-#endif
 
     for (uint8_t i = 0; i < CDROM_NUM; i++) {
         cdrom_t *dev = &cdrom[i];

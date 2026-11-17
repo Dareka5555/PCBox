@@ -74,29 +74,25 @@ void
 Harddrives::populateCDROMBuses(QAbstractItemModel *model)
 {
     model->removeRows(0, model->rowCount());
-    model->insertRows(0, 10);
+    model->insertRows(0, 8);
 
     model->setData(model->index(0, 0), QObject::tr("Disabled"));
     model->setData(model->index(1, 0), "ATAPI");
     model->setData(model->index(2, 0), "LPT");
     model->setData(model->index(3, 0), "SCSI");
     model->setData(model->index(4, 0), "Hitachi");
-    model->setData(model->index(5, 0), "Mitsumi");
-    model->setData(model->index(6, 0), "Panasonic/MKE");
-    model->setData(model->index(7, 0), "Philips CM-100/CM-153");
-    model->setData(model->index(8, 0), "Philips/LMS");
-    model->setData(model->index(9, 0), "Sony");
+    model->setData(model->index(5, 0), "Panasonic/MKE");
+    model->setData(model->index(6, 0), "Philips CM-100/CM-153");
+    model->setData(model->index(7, 0), "Philips/LMS");
 
     model->setData(model->index(0, 0), HDD_BUS_DISABLED, Qt::UserRole);
     model->setData(model->index(1, 0), HDD_BUS_ATAPI, Qt::UserRole);
     model->setData(model->index(2, 0), CDROM_BUS_LPT, Qt::UserRole);
     model->setData(model->index(3, 0), HDD_BUS_SCSI, Qt::UserRole);
     model->setData(model->index(4, 0), CDROM_BUS_HITACHI, Qt::UserRole);
-    model->setData(model->index(5, 0), CDROM_BUS_MITSUMI, Qt::UserRole);
-    model->setData(model->index(6, 0), CDROM_BUS_MKE, Qt::UserRole);
-    model->setData(model->index(7, 0), CDROM_BUS_CM100, Qt::UserRole);
-    model->setData(model->index(8, 0), CDROM_BUS_PHILIPS, Qt::UserRole);
-    model->setData(model->index(9, 0), CDROM_BUS_SONY, Qt::UserRole);
+    model->setData(model->index(5, 0), CDROM_BUS_MKE, Qt::UserRole);
+    model->setData(model->index(6, 0), CDROM_BUS_CM100, Qt::UserRole);
+    model->setData(model->index(7, 0), CDROM_BUS_PHILIPS, Qt::UserRole);
 }
 
 void
@@ -209,10 +205,8 @@ Harddrives::populateBusChannels(QAbstractItemModel *model, int bus, SettingsBusT
             subChannelWidth = 2;
             busesToCheck.append(HDD_BUS_SCSI);
             break;
-        case CDROM_BUS_MITSUMI:
         case CDROM_BUS_PHILIPS:
         case CDROM_BUS_CM100:
-        case CDROM_BUS_SONY:
             /* One drive on the interface. */
             busRows = 1;
             busesToCheck.append(bus);
@@ -377,14 +371,8 @@ Harddrives::BusChannelName(uint8_t bus, uint8_t channel)
         case CDROM_BUS_PHILIPS:
             busName = QString("Philips/LMS");
             break;
-        case CDROM_BUS_SONY:
-            busName = "Sony";
-            break;
         case CDROM_BUS_CM100:
             busName = QString("Philips CM-100/CM-153");
-            break;
-        case CDROM_BUS_MITSUMI:
-            busName = QString("Mitsumi");
             break;
         case CDROM_BUS_HITACHI:
             busName = QString("Hitachi (%1:%2)").arg(channel >> 2).arg(channel & 3);

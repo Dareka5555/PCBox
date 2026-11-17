@@ -36,8 +36,6 @@ extern "C" {
 
 SettingsBusTracking::SettingsBusTracking()
 {
-    mitsumi_tracking = false;
-
     mke_tracking  = 0x0000000000000000ULL;
     mfm_tracking  = 0x0000000000000000ULL;
     esdi_tracking = 0x0000000000000000ULL;
@@ -329,16 +327,8 @@ SettingsBusTracking::busChannelsInUse(const int bus)
             if (philips_tracking)
                 channelsInUse.append(0);
             break;
-        case CDROM_BUS_SONY:
-            if (sony_tracking)
-                channelsInUse.append(0);
-            break;
         case CDROM_BUS_CM100:
             if (cm100_tracking)
-                channelsInUse.append(0);
-            break;
-        case CDROM_BUS_MITSUMI:
-            if (mitsumi_tracking)
                 channelsInUse.append(0);
             break;
         case HDD_BUS_MFM:
@@ -436,14 +426,8 @@ SettingsBusTracking::device_track(int set, uint8_t dev_type, int bus, int channe
         case CDROM_BUS_PHILIPS:
             philips_tracking = set;
             break;
-        case CDROM_BUS_SONY:
-            sony_tracking = set;
-            break;
         case CDROM_BUS_CM100:
             cm100_tracking = set;
-            break;
-        case CDROM_BUS_MITSUMI:
-            mitsumi_tracking = set;
             break;
         case HDD_BUS_MFM:
             mask = ((uint64_t) dev_type) << ((uint64_t) ((channel << 3) & 0x3f));

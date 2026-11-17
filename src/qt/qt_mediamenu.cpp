@@ -1216,14 +1216,8 @@ MediaMenu::cdromUpdateMenu(int i)
         case CDROM_BUS_SCSI:
             busName = "SCSI";
             break;
-        case CDROM_BUS_MITSUMI:
-            busName = "Mitsumi";
-            break;
         case CDROM_BUS_PHILIPS:
             busName = "Philips/LMS";
-            break;
-        case CDROM_BUS_SONY:
-            busName = "Sony";
             break;
         case CDROM_BUS_CM100:
             busName = "Philips CM-100/CM-153";

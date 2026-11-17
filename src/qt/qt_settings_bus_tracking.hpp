@@ -79,8 +79,6 @@ private:
 
     bool philips_tracking { false };
     bool cm100_tracking { false };
-    bool sony_tracking { false };
-    bool mitsumi_tracking;
 };
 
 #endif // QT_SETTINGS_BUS_TRACKING_HPP

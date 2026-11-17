@@ -119,14 +119,12 @@ enum {
     CDROM_BUS_DISABLED =  0,
     CDROM_BUS_PHILIPS  = 13, /* 1 conflicts with MFM in shared storage settings. */
     CDROM_BUS_MKE      =  4,
-    CDROM_BUS_MITSUMI  =  5,
     CDROM_BUS_LPT      =  6,
     CDROM_BUS_ATAPI    =  8,
     CDROM_BUS_SCSI     =  9,
     CDROM_BUS_USB      = 10,
     CDROM_BUS_HITACHI  = 12, /* Shared settings bus IDs: 3 is ESDI, 11 is FDC. */
     CDROM_BUS_CM100    = 14,
-    CDROM_BUS_SONY     = 15,
     CDROM_BUS_DISCONNECTED = 255 /* Kept in the configuration, attached to nothing. */
 };
 
@@ -136,7 +134,6 @@ enum {
 #define BUS_TYPE_IDE                CDROM_BUS_ATAPI
 #define BUS_TYPE_SCSI               CDROM_BUS_SCSI
 #define BUS_TYPE_CM100              CDROM_BUS_CM100
-#define BUS_TYPE_SONY               CDROM_BUS_SONY
 #define BUS_TYPE_BOTH              -2
 #define BUS_TYPE_NONE              -1
 
@@ -377,8 +374,6 @@ static const struct cdrom_drive_types_s {
     { "SONY",     "CD-ROM CDU5225",   "NYS4", "",          "sony_5225",       BUS_TYPE_IDE,     0, 52, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "SONY",     "CD-ROM CDU611",    "2.2c", "",          "sony_611",        BUS_TYPE_IDE,     0, 24, 36, 0, 0, {  3,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "SONY",     "CD-ROM CDU76",     "1.0i", "",          "sony_76",         BUS_TYPE_IDE,     0,  4, 36, 0, 0, {  2, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "SONY",     "CDU31A",           "1.0",  "",          "sony_cdu31a",     BUS_TYPE_SONY,    0,  1,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "SONY",     "CDU33A",           "1.0",  "",          "sony_cdu33a",     BUS_TYPE_SONY,    0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "SONY",     "DVD-ROM DDU1612",  "BA01", "",          "sony_1612",       BUS_TYPE_IDE,     0, 48, 36, 0, 1, {  4,  2,  2,  4 }, NULL,        NULL,               NULL, 16,  0, 0, CDROM_WM_NONE                }, /* verified: 16x DVD / ~40-48x CD */
     { "SONY",     "DVD-ROM DDU1615",  "B2EE", "",          "sony_1615",       BUS_TYPE_IDE,     0, 48, 36, 0, 1, {  4,  2,  2,  4 }, NULL,        NULL,               NULL, 16,  0, 0, CDROM_WM_NONE                }, /* verified: 16x DVD (updated DDU1612) */
     { "SONY",     "DVD-ROM DRU-510AK", "U305", "",         "sony_510ak",      BUS_TYPE_IDE,     0, 32, 36, 0, 1, {  3,  2,  2,  4 }, NULL,        NULL,               NULL, 12,  0, 0, CDROM_WM_CDR | CDROM_WM_CDRW }, /* verified: 12x DVD-ROM / 32x CD */
@@ -439,7 +434,6 @@ static const struct cdrom_drive_types_s {
     { "TOSHIBA",  "DVD-ROM SD-M1912", "TM01", "",          "toshiba_m1912",   BUS_TYPE_IDE,     0, 48, 96, 0, 1, {  4,  2,  2,  4 }, NULL,        NULL,               NULL, 16,  0, 0, CDROM_WM_NONE                }, /* DVD-ROM model produced under their TSST brand */
     { "TOSHIBA",  "DVD-ROM SD-M2012", "TU01", "",          "toshiba_m2012",   BUS_TYPE_IDE,     0, 48, 96, 0, 1, {  4,  2,  2,  4 }, NULL,        NULL,               NULL, 16,  0, 0, CDROM_WM_NONE                }, /* DVD-ROM model produced under their TSST brand; updated version of SD-M1912 */
     { "TOSHIBA",  "SD-H802A",         "1.00", "",          "toshiba_h802a",   BUS_TYPE_IDE,     0, 15, 36, 0, 1, {  4,  2,  2,  5 }, NULL,        NULL,               NULL,  5,  2, 1, CDROM_WM_NONE                }, /* 15x CD / 5x DVD / 2x HD DVD */
-    { "WEARNES",  "CDD-110",          "1.02", "",          "wearnes_110",     BUS_TYPE_SONY,    0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "WEARNES",  "CDD-120A",         "1.02", "",          "wearnes_120",     BUS_TYPE_IDE,     0,  2, 36, 0, 0, {  0, -1, -1,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "YAMAHA",   "CRW4416S",         "1.0j", "",          "yamaha_crw4416s", BUS_TYPE_SCSI,    2, 16, 36, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_CDR | CDROM_WM_CDRW },
     { "YAMAHA",   "CRW8424E",         "1.0g", "",          "yamaha_crw8424",  BUS_TYPE_IDE,     0, 24, 36, 0, 0, {  4,  2,  2, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_CDR | CDROM_WM_CDRW },
@@ -734,7 +728,6 @@ extern int             cdrom_read_pma(const cdrom_t *dev, uint8_t *b, const int 
 extern int             cdrom_read_atip(const cdrom_t *dev, uint8_t *b, const int max_len);
 extern int             cdrom_read_toc_sony(const cdrom_t *dev, uint8_t *b, const uint8_t start_track,
                                            const int msf, const int max_len);
-extern void            cdrom_get_track_buffer(cdrom_t *dev, uint8_t *buf);
 extern int             cdrom_get_q(cdrom_t *dev, uint8_t *buf, int curtoctrk, uint8_t mode);
 extern uint8_t         cdrom_read_disc_info_toc(cdrom_t *dev, uint8_t *b,
                                                 const uint8_t track, const int type);
