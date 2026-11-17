@@ -957,7 +957,7 @@ then
 	then
 		echo [-] Downloading assets
 		cd archive_tmp
-		if ! git clone --depth 1 "$(dirname "$git_repo")/assets.git" assets
+		if ! git clone --depth 1 https://github.com/86Box/assets.git assets
 		then
 			echo [!] Assets download failed
 			exit 7
@@ -989,7 +989,7 @@ else
 	for retry in 0 5 10 20 40
 	do
 		sleep $retry
-		git clone --depth 1 "$(dirname "$git_repo")/mdsx.git" "$prefix" && break
+		git clone --depth 1 https://github.com/86Box/mdsx.git "$prefix" && break
 	done
 fi
 [ "$cmake_build_type" = "Debug" ] && debug_args=DEBUG=y || debug_args=
