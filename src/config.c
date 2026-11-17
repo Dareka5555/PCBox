@@ -2203,11 +2203,14 @@ load_floppy_and_cdrom_drives(void)
             sscanf("0, none", "%01u, %s", &d, s);
         cdrom[c].sound_on = d;
         cdrom[c].bus_type = hdd_string_to_bus(s, 1);
+        if (cdrom[c].bus_type == HDD_BUS_LPT)
+            cdrom[c].bus_type = CDROM_BUS_DISABLED;
         sprintf(temp, "cdrom_%02i_disconnected_bus", c + 1);
         cdrom[c].disconnected_bus = 0;
         if (cdrom[c].bus_type == CDROM_BUS_DISCONNECTED) {
             cdrom[c].disconnected_bus = hdd_string_to_bus(ini_section_get_string(cat, temp, "atapi"), 1);
-            if (!cdrom[c].disconnected_bus || cdrom[c].disconnected_bus == CDROM_BUS_DISCONNECTED)
+            if (!cdrom[c].disconnected_bus || cdrom[c].disconnected_bus == CDROM_BUS_DISCONNECTED ||
+                cdrom[c].disconnected_bus == HDD_BUS_LPT)
                 cdrom[c].disconnected_bus = hdd_string_to_bus("atapi", 1);
         }
 
@@ -2227,10 +2230,7 @@ load_floppy_and_cdrom_drives(void)
         cdrom[c].no_check = ini_section_get_int(cat, temp, 0);
 
         sprintf(temp, "cdrom_%02i_type", c + 1);
-        p = ini_section_get_string(cat, temp, cdrom[c].bus_type == CDROM_BUS_CM100 ? "philips_cm100" :
-                                       cdrom[c].bus_type == CDROM_BUS_PHILIPS ? "philips_cm205" :
-                                       cdrom[c].bus_type == CDROM_BUS_HITACHI ? "hitachi_1503s" :
-                                       cdrom[c].bus_type == CDROM_BUS_MKE ? "cr563" : "86cd");
+        p = ini_section_get_string(cat, temp, "86cd");
         /* TODO: Configuration migration, remove when no longer needed. */
         int cdrom_type = cdrom_get_from_internal_name(!strcmp(p, "goldstar") ? "goldstar_r560b" : p);
         if (cdrom_type == -1) {
@@ -2244,38 +2244,16 @@ load_floppy_and_cdrom_drives(void)
         if (cdrom_get_type(c) >= count)
             cdrom_set_type(c, count - 1);
         if (cdrom[c].bus_type == CDROM_BUS_DISCONNECTED &&
-            cdrom_drive_types[cdrom_get_type(c)].bus_type != BUS_TYPE_BOTH &&
-            cdrom[c].disconnected_bus != CDROM_BUS_LPT)
+            cdrom_drive_types[cdrom_get_type(c)].bus_type != BUS_TYPE_BOTH)
             cdrom[c].disconnected_bus = cdrom_drive_types[cdrom_get_type(c)].bus_type;
 
         if (!strcmp(p, "86cd"))
             ini_section_delete_var(cat, temp);
 
         /* Default values, needed for proper operation of the Settings dialog. */
-        cdrom[c].mke_channel = cdrom[c].ide_channel = cdrom[c].scsi_device_id = c & 3;
+        cdrom[c].ide_channel = cdrom[c].scsi_device_id = c & 3;
 
-        if (cdrom[c].bus_type == CDROM_BUS_CM100) {
-            cdrom_set_type(c, cdrom_get_from_internal_name("philips_cm100"));
-            cdrom[c].speed = 1;
-        } else if (cdrom[c].bus_type == CDROM_BUS_PHILIPS) {
-            if (strcmp(cdrom_get_internal_name(cdrom[c].type), "philips_cm205ms"))
-                cdrom_set_type(c, cdrom_get_from_internal_name("philips_cm205"));
-            cdrom[c].speed = 1;
-        } else if (cdrom[c].bus_type == CDROM_BUS_HITACHI) {
-            cdrom_set_type(c, cdrom_get_from_internal_name("hitachi_1503s"));
-            sprintf(temp, "cdrom_%02i_hitachi_channel", c + 1);
-            cdrom[c].hitachi_channel = ini_section_get_int(cat, temp, c & 3) & 3;
-        } else if (cdrom[c].bus_type == CDROM_BUS_MKE) {
-            if (cdrom_drive_types[cdrom_get_type(c)].bus_type != BUS_TYPE_MKE)
-                cdrom_set_type(c, cdrom_get_from_internal_name("cr563_075"));
-
-            sprintf(temp, "cdrom_%02i_mke_channel", c + 1);
-            cdrom[c].mke_channel = ini_section_get_int(cat, temp, c & 3);
-
-            if (cdrom[c].mke_channel > 3)
-                cdrom[c].mke_channel = 3;
-
-        } else if (cdrom[c].bus_type == CDROM_BUS_ATAPI) {
+        if (cdrom[c].bus_type == CDROM_BUS_ATAPI) {
             sprintf(temp, "cdrom_%02i_ide_channel", c + 1);
             sprintf(tmp2, "%u:%u", (c & 3) >> 1, (c & 3) & 1);
             p = ini_section_get_string(cat, temp, tmp2);
@@ -2287,19 +2265,6 @@ load_floppy_and_cdrom_drives(void)
 
             if (cdrom[c].ide_channel >= IDE_DRIVES_MAX)
                 cdrom[c].ide_channel = IDE_DRIVES_MAX - 1;
-        } else if (cdrom[c].bus_type == CDROM_BUS_LPT) {
-            sprintf(temp, "cdrom_%02i_lpt_port", c + 1);
-            cdrom[c].res = ini_section_get_int(cat, temp, 0);
-
-            if (cdrom[c].res >= PARALLEL_MAX)
-                cdrom[c].res = PARALLEL_MAX - 1;
-
-            /* The bridge: the BackPack unless the configuration names one. */
-            sprintf(temp, "cdrom_%02i_lpt_bridge", c + 1);
-            p = ini_section_get_string(cat, temp, NULL);
-            cdrom[c].lpt_bridge = (p == NULL) ? HDD_LPT_BPCK : hdd_lpt_bridge_get_from_internal_name(p);
-            if (!cdrom_lpt_bridge_valid(cdrom[c].lpt_bridge))
-                cdrom[c].lpt_bridge = HDD_LPT_BPCK;
         } else if (cdrom[c].bus_type == CDROM_BUS_SCSI) {
             sprintf(temp, "cdrom_%02i_scsi_location", c + 1);
             sprintf(tmp2, "%01u:%02u", SCSI_BUS_MAX, c & 3);
@@ -2317,16 +2282,6 @@ load_floppy_and_cdrom_drives(void)
                 dev &= 15;
                 cdrom[c].scsi_device_id = (board << 4) + dev;
             }
-        }
-
-        if (cdrom[c].bus_type != CDROM_BUS_HITACHI) {
-            sprintf(temp, "cdrom_%02i_hitachi_channel", c + 1);
-            ini_section_delete_var(cat, temp);
-        }
-
-        if (cdrom[c].bus_type != CDROM_BUS_MKE) {
-            sprintf(temp, "cdrom_%02i_mke_channel", c + 1);
-            ini_section_delete_var(cat, temp);
         }
 
         if (cdrom[c].bus_type != CDROM_BUS_ATAPI) {
@@ -5080,7 +5035,6 @@ save_floppy_and_cdrom_drives(void)
         else {
             /* In case one wants an ATAPI drive on SCSI and vice-versa. */
             if ((cdrom[c].bus_type != CDROM_BUS_DISCONNECTED) &&
-                (cdrom[c].bus_type != CDROM_BUS_LPT) &&
                 (cdrom_drive_types[cdrom_get_type(c)].bus_type != BUS_TYPE_BOTH) &&
                 (cdrom_drive_types[cdrom_get_type(c)].bus_type != cdrom[c].bus_type))
                 cdrom[c].bus_type = cdrom_drive_types[cdrom_get_type(c)].bus_type;
@@ -5088,19 +5042,6 @@ save_floppy_and_cdrom_drives(void)
             sprintf(tmp2, "%u, %s", cdrom[c].sound_on,
                     hdd_bus_to_string(cdrom[c].bus_type, 1));
             ini_section_set_string(cat, temp, tmp2);
-        }
-
-        sprintf(temp, "cdrom_%02i_hitachi_channel", c + 1);
-        if (cdrom[c].bus_type != CDROM_BUS_HITACHI)
-            ini_section_delete_var(cat, temp);
-        else
-            ini_section_set_int(cat, temp, cdrom[c].hitachi_channel);
-
-        sprintf(temp, "cdrom_%02i_mke_channel", c + 1);
-        if (cdrom[c].bus_type != CDROM_BUS_MKE)
-            ini_section_delete_var(cat, temp);
-        else {
-            ini_section_set_int(cat, temp, cdrom[c].mke_channel);
         }
 
         sprintf(temp, "cdrom_%02i_ide_channel", c + 1);
@@ -5123,18 +5064,6 @@ save_floppy_and_cdrom_drives(void)
                     cdrom[c].scsi_device_id & 15);
             ini_section_set_string(cat, temp, tmp2);
         }
-
-        sprintf(temp, "cdrom_%02i_lpt_port", c + 1);
-        if (cdrom[c].bus_type != CDROM_BUS_LPT)
-            ini_section_delete_var(cat, temp);
-        else
-            ini_section_set_int(cat, temp, cdrom[c].res);
-
-        sprintf(temp, "cdrom_%02i_lpt_bridge", c + 1);
-        if ((cdrom[c].bus_type != CDROM_BUS_LPT) || (cdrom[c].lpt_bridge == HDD_LPT_BPCK))
-            ini_section_delete_var(cat, temp);
-        else
-            ini_section_set_string(cat, temp, hdd_lpt_bridge_get_internal_name(cdrom[c].lpt_bridge));
 
         sprintf(temp, "cdrom_%02i_image_path", c + 1);
         if ((cdrom[c].bus_type == 0) || (strlen(cdrom[c].image_path) == 0))

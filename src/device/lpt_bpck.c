@@ -277,7 +277,8 @@ bpck_attach_drive(bpck_t *dev)
     if (dev->no_drive)
         return 0;
 
-    dev->sd = cdrom_get_lpt_device(dev->port);
+    dev->sd = NULL;
+    dev->no_drive = 1;
 
     if (dev->sd == NULL) {
         dev->no_drive = 1;

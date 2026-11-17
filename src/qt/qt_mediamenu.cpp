@@ -1216,21 +1216,6 @@ MediaMenu::cdromUpdateMenu(int i)
         case CDROM_BUS_SCSI:
             busName = "SCSI";
             break;
-        case CDROM_BUS_PHILIPS:
-            busName = "Philips/LMS";
-            break;
-        case CDROM_BUS_CM100:
-            busName = "Philips CM-100/CM-153";
-            break;
-        case CDROM_BUS_HITACHI:
-            busName = "Hitachi";
-            break;
-        case CDROM_BUS_MKE:
-            busName = "Panasonic/MKE";
-            break;
-        case CDROM_BUS_LPT:
-            busName = "LPT";
-            break;
     }
 
     menu->setTitle(tr("&CD-ROM %1 (%2): %3").arg(QString::number(i + 1), busName, name.isEmpty() ? tr("(empty)") : name2));

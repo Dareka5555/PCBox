@@ -38,10 +38,6 @@
 #include <86box/cdrom_image.h>
 #include <86box/cdrom_image_writable.h>
 #include <86box/cdrom_interface.h>
-#include <86box/cdrom_hitachi.h>
-#include <86box/cdrom_philips.h>
-#include <86box/cdrom_cm153.h>
-#include <86box/cdrom_mke.h>
 #include <86box/crc.h>
 #ifndef TEST
 #include <86box/log.h>
@@ -148,14 +144,6 @@ static const struct {
 } controllers[] = {
     // clang-format off
     { &cdrom_interface_none_device  },
-    { &hitachi_cdrom_isa_device     },
-    { &mke_cdrom_noncreative_device },
-    { &mke_cdrom_device             },
-    { &philips_cm153_device         },
-    { &philips_cm250_device         },
-    { &teac_cdrom_device            },
-    { &teac_cdrom_16bit_device      },
-    { &hitachi_cdrom_mca_device     },
     { NULL                          }
     // clang-format on
 };
@@ -3940,25 +3928,6 @@ cdrom_hard_reset(void)
 #endif
 
                     break;
-
-#ifndef IS_TEST
-                case CDROM_BUS_LPT:
-                    /*
-                     * The bridge is not a device the user picks: assigning the drive
-                     * to an LPT port is the whole configuration. It claims the port
-                     * with lpt_attach(), first claim wins. The BackPack drives the
-                     * drive itself; the others have an IDE board of their own, the
-                     * drive is an ATAPI drive on it and needs it first.
-                     */
-                    if (dev->lpt_bridge == HDD_LPT_BPCK) {
-                        scsi_cdrom_drive_reset(i);
-                        device_add_inst(&lpt_bpck_device, dev->res + 1);
-                    } else {
-                        device_add_inst(hdd_lpt_bridge_device(dev->lpt_bridge), dev->res + 1);
-                        scsi_cdrom_drive_reset(i);
-                    }
-                    break;
-#endif
 
                 default:
                     break;

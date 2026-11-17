@@ -74,25 +74,15 @@ void
 Harddrives::populateCDROMBuses(QAbstractItemModel *model)
 {
     model->removeRows(0, model->rowCount());
-    model->insertRows(0, 8);
+    model->insertRows(0, 3);
 
     model->setData(model->index(0, 0), QObject::tr("Disabled"));
     model->setData(model->index(1, 0), "ATAPI");
-    model->setData(model->index(2, 0), "LPT");
-    model->setData(model->index(3, 0), "SCSI");
-    model->setData(model->index(4, 0), "Hitachi");
-    model->setData(model->index(5, 0), "Panasonic/MKE");
-    model->setData(model->index(6, 0), "Philips CM-100/CM-153");
-    model->setData(model->index(7, 0), "Philips/LMS");
+    model->setData(model->index(2, 0), "SCSI");
 
     model->setData(model->index(0, 0), HDD_BUS_DISABLED, Qt::UserRole);
     model->setData(model->index(1, 0), HDD_BUS_ATAPI, Qt::UserRole);
-    model->setData(model->index(2, 0), CDROM_BUS_LPT, Qt::UserRole);
-    model->setData(model->index(3, 0), HDD_BUS_SCSI, Qt::UserRole);
-    model->setData(model->index(4, 0), CDROM_BUS_HITACHI, Qt::UserRole);
-    model->setData(model->index(5, 0), CDROM_BUS_MKE, Qt::UserRole);
-    model->setData(model->index(6, 0), CDROM_BUS_CM100, Qt::UserRole);
-    model->setData(model->index(7, 0), CDROM_BUS_PHILIPS, Qt::UserRole);
+    model->setData(model->index(2, 0), HDD_BUS_SCSI, Qt::UserRole);
 }
 
 void
@@ -205,140 +195,6 @@ Harddrives::populateBusChannels(QAbstractItemModel *model, int bus, SettingsBusT
             subChannelWidth = 2;
             busesToCheck.append(HDD_BUS_SCSI);
             break;
-        case CDROM_BUS_PHILIPS:
-        case CDROM_BUS_CM100:
-            /* One drive on the interface. */
-            busRows = 1;
-            busesToCheck.append(bus);
-            break;
-        case CDROM_BUS_HITACHI:
-            shifter = 2;
-            orer    = 3;
-            busRows = 4;
-            busesToCheck.append(CDROM_BUS_HITACHI);
-            break;
-        case CDROM_BUS_MKE:
-            shifter = 2;
-            orer    = 3;
-            busRows = 4;
-            busesToCheck.append(CDROM_BUS_MKE);
-            break;
-        case TAPE_BUS_FDC:
-            shifter = 2;
-            orer    = 3;
-            busRows = 8;
-            busesToCheck.append(TAPE_BUS_FDC);
-            break;
-        case TAPE_BUS_LPT:
-            shifter = 0;
-            orer    = 0;
-            busRows = 4;
-            busesToCheck.append(TAPE_BUS_LPT);
-            break;
-        default:
-            break;
-    }
-    if (sbt != nullptr && !busesToCheck.empty()) {
-        for (auto const &checkBus : busesToCheck) {
-            channelsInUse.append(sbt->busChannelsInUse(checkBus));
-        }
-    }
-
-    /* A drive left on a board with no controller any more still has its
-       channel listed, so that it shows where it is. */
-    if (is_ide) {
-        for (const int channel : channelsInUse) {
-            if ((channel < IDE_DRIVES_MAX) && (channel >= busRows))
-                busRows = (channel | 1) + 1;
-        }
-    } else if (is_scsi) {
-        for (const int channel : channelsInUse) {
-            if ((channel < (SCSI_BUS_MAX * SCSI_ID_MAX)) && (channel >= busRows))
-                busRows = (channel | 15) + 1;
-        }
-    }
-
-    if ((bus == TAPE_BUS_LPT) && lptBridges) {
-        /* Each port once per bridge; the port is in use either way. */
-        model->insertRows(0, PARALLEL_MAX * HDD_LPT_BRIDGES);
-        for (int i = 0; i < (PARALLEL_MAX * HDD_LPT_BRIDGES); ++i) {
-            const int port   = i / HDD_LPT_BRIDGES;
-            const int bridge = i % HDD_LPT_BRIDGES;
-            auto      idx    = model->index(i, 0);
-
-            model->setData(idx, QString("LPT%1 %2").arg(port + 1).arg(lptBridgeName(bridge)));
-            model->setData(idx, port | (bridge << 2), Qt::UserRole);
-            auto *channelItem = qobject_cast<QStandardItemModel *>(model)->item(i);
-            if (channelItem)
-                channelItem->setEnabled(!channelsInUse.contains(port) && lpt_ports[port].enabled &&
-                                        ((lptBridges != LptBridgesCdrom) || cdrom_lpt_bridge_valid(bridge)));
-        }
-        return;
-    }
-
-    model->insertRows(0, busRows);
-    for (int i = 0; i < busRows; ++i) {
-        auto idx = model->index(i, 0);
-        if (bus == TAPE_BUS_LPT)
-            model->setData(idx, QString("LPT%1").arg(i + 1));
-        else if (is_ide)
-            model->setData(idx, QString("%1:%2 %3").arg(i >> 1).arg(i & 1).arg(ownerName(i >> 1, owners, owned, conflicts, conflictCount)));
-        else if (is_scsi)
-            model->setData(idx, QString("%1:%2 %3").arg(i >> 4).arg(i & 15, 2, 10, QChar('0')).arg(ownerName(i >> 4, owners, owned)));
-        else if (is_hdc)
-            model->setData(idx, QString("%1:%2 %3").arg(i >> 1).arg(i & 1).arg(ownerName(i >> 1, owners, owned)));
-        else
-            model->setData(idx, QString("%1:%2").arg(i >> shifter).arg(i & orer, subChannelWidth, 10, QChar('0')));
-        model->setData(idx, ((i >> shifter) << shifter) | (i & orer), Qt::UserRole);
-        const auto *channelModel = qobject_cast<QStandardItemModel *>(model);
-        auto       *channelItem  = channelModel->item(i);
-        if (channelItem) {
-            bool enabled = !channelsInUse.contains(i);
-            if ((bus == TAPE_BUS_LPT) && (i < PARALLEL_MAX) && !lpt_ports[i].enabled)
-                enabled = false;
-            if (is_ide && !owners[i >> 1].onboard && (owners[i >> 1].device == nullptr))
-                enabled = false;
-            if (is_scsi && (((i >> 4) >= owned) || (!owners[i >> 4].onboard && (owners[i >> 4].device == nullptr))))
-                enabled = false;
-            channelItem->setEnabled(enabled);
-        }
-    }
-
-    if (bus != HDD_BUS_DISABLED) {
-        const int row = model->rowCount();
-        model->insertRow(row);
-        model->setData(model->index(row, 0), QObject::tr("(Disconnected)"));
-        model->setData(model->index(row, 0), CHANNEL_NONE, Qt::UserRole);
-    }
-
-    /* Then, not to be picked, each controller left without its channels. */
-    if (is_ide) {
-        auto *standard = qobject_cast<QStandardItemModel *>(model);
-
-        for (int i = 0; (standard != nullptr) && (i < conflictCount); i++) {
-            auto *item = new QStandardItem(conflictText(i, owners, owned, conflicts, conflictCount));
-
-            item->setData(CHANNEL_NONE, Qt::UserRole);
-            item->setEnabled(false);
-            standard->appendRow(item);
-        }
-    }
-}
-
-QString
-Harddrives::BusChannelName(uint8_t bus, uint8_t channel)
-{
-    if (bus != HDD_BUS_DISABLED && channel == CHANNEL_NONE)
-        return QObject::tr("(Disconnected)");
-
-    QString busName;
-    switch (bus) {
-        case HDD_BUS_DISCONNECTED:
-            busName = QObject::tr("(Disconnected)");
-            break;
-        case HDD_BUS_DISABLED:
-            busName = QString(QObject::tr("Disabled"));
-            break;
         case HDD_BUS_MFM:
         case HDD_BUS_XTA:
         case HDD_BUS_ESDI: {
@@ -368,18 +224,6 @@ Harddrives::BusChannelName(uint8_t bus, uint8_t channel)
                           .arg(ownerName(channel >> 4, owners, owned));
             break;
         }
-        case CDROM_BUS_PHILIPS:
-            busName = QString("Philips/LMS");
-            break;
-        case CDROM_BUS_CM100:
-            busName = QString("Philips CM-100/CM-153");
-            break;
-        case CDROM_BUS_HITACHI:
-            busName = QString("Hitachi (%1:%2)").arg(channel >> 2).arg(channel & 3);
-            break;
-        case CDROM_BUS_MKE:
-            busName = QString("Panasonic/MKE (%1:%2)").arg(channel >> 2).arg(channel & 3);
-            break;
         case TAPE_BUS_FDC:
             busName = QString("FDC (%1:%2)").arg(channel >> 2).arg(channel & 3);
             break;

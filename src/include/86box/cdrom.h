@@ -117,23 +117,14 @@ extern "C" {
 
 enum {
     CDROM_BUS_DISABLED =  0,
-    CDROM_BUS_PHILIPS  = 13, /* 1 conflicts with MFM in shared storage settings. */
-    CDROM_BUS_MKE      =  4,
-    CDROM_BUS_LPT      =  6,
     CDROM_BUS_ATAPI    =  8,
     CDROM_BUS_SCSI     =  9,
     CDROM_BUS_USB      = 10,
-    CDROM_BUS_HITACHI  = 12, /* Shared settings bus IDs: 3 is ESDI, 11 is FDC. */
-    CDROM_BUS_CM100    = 14,
     CDROM_BUS_DISCONNECTED = 255 /* Kept in the configuration, attached to nothing. */
 };
 
-#define BUS_TYPE_PHILIPS            CDROM_BUS_PHILIPS
-#define BUS_TYPE_HITACHI            CDROM_BUS_HITACHI
-#define BUS_TYPE_MKE                CDROM_BUS_MKE
 #define BUS_TYPE_IDE                CDROM_BUS_ATAPI
 #define BUS_TYPE_SCSI               CDROM_BUS_SCSI
-#define BUS_TYPE_CM100              CDROM_BUS_CM100
 #define BUS_TYPE_BOTH              -2
 #define BUS_TYPE_NONE              -1
 
@@ -198,7 +189,6 @@ static const struct cdrom_drive_types_s {
     { "BTC",      "CD-ROM BCD36XH",   "U1.0", "",          "btc_36xh",        BUS_TYPE_IDE,     0, 36, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "CHINON",   "CD-ROM CDS-431",   "H42 ", "",          "chinon_431",      BUS_TYPE_SCSI,    1,  1, 36, 1, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "CHINON",   "CD-ROM CDX-435",   "M62 ", "",          "chinon_435",      BUS_TYPE_SCSI,    1,  2, 36, 1, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "CREATIVE", "CD-200",           "1.01", "",          "creative_cd200",  BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "CREATIVE", "CD2422E",          "MC10", "",          "creative_2422",   BUS_TYPE_IDE,     0, 24, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "CREATIVE", "CD3621E",          "ZC10", "",          "creative_3621",   BUS_TYPE_IDE,     0, 36, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "CREATIVE", "CD5220E",          "2.02", "",          "creative_5220",   BUS_TYPE_IDE,     0, 52, 36, 0, 0, {  4,  2,  2,  3 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
@@ -208,7 +198,6 @@ static const struct cdrom_drive_types_s {
     { "DEC",      "RRD45   (C) DEC",  "0436", "",          "dec_45",          BUS_TYPE_SCSI,    1,  4, 36, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "ECS",      "300HPD",           "V200", "",          "ecs_300",         BUS_TYPE_IDE,     0,  3, 36, 0, 0, {  2, -1, -1,  2 }, "300HPD",   "ECS",    "VERTOS 300HPD",  0,  0, 0, CDROM_WM_NONE                }, /* Firmware revision not yet confirmed */
     { "ECS",      "600ESD",           "V300", "",          "ecs_600",         BUS_TYPE_IDE,     0,  6, 36, 0, 0, {  3, -1, -1,  1 }, "600ESD",   "ECS",    "VERTOS 600ESD",  0,  0, 0, CDROM_WM_NONE                },
-    { "FUNAI",    "CD200F",           "2.10", "",          "funai_cd200f",    BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "GOLDSTAR", "CRD-8160B",        "3.14", "",          "goldstar",        BUS_TYPE_IDE,     0, 16, 36, 0, 0, {  4,  2,  1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "GOLDSTAR", "CRD-8240B",        "1.11", "",          "goldstar_8240b",  BUS_TYPE_IDE,     0, 24, 36, 0, 0, {  4,  2,  1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "GOLDSTAR", "CRD-8320B",        "1.10", "",          "goldstar_8320b",  BUS_TYPE_IDE,     0, 32, 36, 0, 0, {  4,  2,  1,  3 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
@@ -221,7 +210,6 @@ static const struct cdrom_drive_types_s {
     { "GOLDSTAR", "GCD-R560B",        "1.00", "",          "goldstar_r560b",  BUS_TYPE_IDE,     0,  6, 36, 0, 0, {  3,  2,  2, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "GOLDSTAR", "GCD-R580B",        "1.04", "",          "goldstar_r580b",  BUS_TYPE_IDE,     0,  8, 36, 0, 0, {  3,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "GRUNDIG",  "CDR100",           "1.20", "",          "grundig_100",     BUS_TYPE_SCSI,    2,  4, 36, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_CDR                 }, /* Early version of Philips CDD2000 */
-    { "HITACHI",  "CDR-1503S",        "",     "",          "hitachi_1503s",   BUS_TYPE_HITACHI, 0,  1,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "HITACHI",  "CDR-7930",         "A5  ", "",          "hitachi_r7930",   BUS_TYPE_IDE,     0,  8, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "HITACHI",  "CDR-8130",         "0020", "",          "hitachi_r8130",   BUS_TYPE_IDE,     0, 16, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "HITACHI",  "CDR-8330",         "0007", "",          "hitachi_r8330",   BUS_TYPE_IDE,     0, 24, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
@@ -275,14 +263,6 @@ static const struct cdrom_drive_types_s {
     { "MATSHITA", "CD-ROM CR-587",    "7S13", "",          "matshita_587",    BUS_TYPE_IDE,     0, 24, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "MATSHITA", "CD-ROM CR-588",    "LS15", "",          "matshita_588",    BUS_TYPE_IDE,     0, 32, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "MATSHITA", "CD-ROM CR-594-C",  "PA05", "",          "matshita_594",    BUS_TYPE_IDE,     0, 48, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-521B",          "2.11", "",          "cr521b",          BUS_TYPE_MKE,     0,  1,  0, 1, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-562",           "0.75", "",          "cr562",           BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-562",           "0.76", "",          "cr562_076",       BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-562",           "0.80", "",          "cr562_080",       BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-562",           "081k", "",          "cr562_081k",      BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-563",           "0.74", "",          "cr563",           BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-563",           "0.75", "",          "cr563_075",       BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "MATSHITA", "CR-563",           "0.80", "",          "cr563_080",       BUS_TYPE_MKE,     0,  2,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "MATSHITA", "CR-571",           "1.0e", "",          "matshita_571",    BUS_TYPE_IDE,     0,  2, 36, 0, 0, {  0, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "MATSHITA", "CR-572",           "1.0j", "",          "matshita_572",    BUS_TYPE_IDE,     0,  4, 36, 0, 0, {  0, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "MATSHITA", "CR-574",           "P.11", "",          "matshita_574",    BUS_TYPE_IDE,     0,  4, 36, 0, 0, {  2, -1, -1,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
@@ -328,9 +308,6 @@ static const struct cdrom_drive_types_s {
     { "PHILIPS",  "CDD2600",          "1.07", "",          "philips_2600",    BUS_TYPE_SCSI,    2,  6, 36, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_CDR                 },
     { "PHILIPS",  "CDD4401/31",       "C1.7", "",          "philips_4401",    BUS_TYPE_IDE,     0, 32, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_CDR | CDROM_WM_CDRW },
     { "PHILIPS",  "CDD4801/71",       "C1.3", "",          "philips_4801",    BUS_TYPE_IDE,     0, 48, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_CDR | CDROM_WM_CDRW },
-    { "PHILIPS",  "CM100",            "",     "",          "philips_cm100",   BUS_TYPE_CM100,   0,  1,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "PHILIPS",  "CM205",            "",     "",          "philips_cm205",   BUS_TYPE_PHILIPS, 0,  1,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "PHILIPS",  "CM205MS",          "",     "",          "philips_cm205ms", BUS_TYPE_PHILIPS, 0,  1,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "PIONEER",  "CD-ROM DR-A12X",   "1.00", "",          "pioneer_a12x",    BUS_TYPE_IDE,     0, 12, 36, 0, 0, {  4,  2,  1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "PIONEER",  "CD-ROM DR-U124X",  "4021", "",          "pioneer_u124x",   BUS_TYPE_SCSI,    2,  4, 47, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                }, /* Another (updated?) variant of DRM-604X */
     { "PIONEER",  "CD-ROM DR-U16S",   "0066", "",          "pioneer_u16s",    BUS_TYPE_SCSI,    2, 36, 47, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
@@ -390,7 +367,6 @@ static const struct cdrom_drive_types_s {
     { "TEAC",     "CD-532EA",         "3.0A", "",          "teac_532ea",      BUS_TYPE_IDE,     0, 32, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "TEAC",     "CD-532S",          "3.0A", "",          "teac_532s",       BUS_TYPE_SCSI,    1, 32, 36, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "TEAC",     "CD-540E",          "2.0U", "",          "teac_540e",       BUS_TYPE_IDE,     0, 40, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
-    { "TEAC",     "CD-55A",           "1.00", "",          "teac_cd55a",      BUS_TYPE_MKE,     0,  4,  0, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "TEAC",     "CD-P520E",         "2.0R", "",          "teac_520e",       BUS_TYPE_IDE,     0, 52, 36, 0, 0, {  4,  2,  2,  4 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "TEAC",     "CD-ROM R55S",      "1.0R", "",          "teac_55s",        BUS_TYPE_SCSI,    2,  4, 36, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
     { "TEAC",     "CD-ROM R56S",      "1.0R", "",          "teac_56s",        BUS_TYPE_SCSI,    2, 24, 36, 0, 0, { -1, -1, -1, -1 }, NULL,        NULL,               NULL,  0,  0, 0, CDROM_WM_NONE                },
@@ -548,18 +524,11 @@ typedef struct cdrom_ops_t {
 typedef struct cdrom {
     uint8_t           id;
 
-    union {
-        uint8_t           res;
-        uint8_t           res0;      /* Reserved for other ID's. */
-        uint8_t           hitachi_channel;
-        uint8_t           mke_channel;
-        uint8_t           ide_channel;
-        uint8_t           scsi_device_id;
-    };
+    uint8_t            ide_channel;
+    uint8_t            scsi_device_id;
 
     uint8_t            bus_type;     /* 0 = ATAPI, 1 = SCSI */
     uint8_t            disconnected_bus; /* The interface it keeps while disconnected. */
-    uint8_t            lpt_bridge;   /* bus LPT: the bridge, HDD_LPT_* */
     uint8_t            bus_mode;     /* Bit 0 = PIO suported;
                                         Bit 1 = DMA supportd. */
     uint8_t            cd_status;    /* Struct variable reserved for
@@ -754,7 +723,6 @@ extern void            cdrom_global_init(void);
 extern void            cdrom_hard_reset(void);
 /* Forward declared: cdrom.h is included where scsi_device.h is not. */
 struct scsi_device_t;
-extern struct scsi_device_t *cdrom_get_lpt_device(const uint8_t port);
 extern void            cdrom_close(void);
 extern void            cdrom_insert(const uint8_t id);
 extern void            cdrom_exit(const uint8_t id);

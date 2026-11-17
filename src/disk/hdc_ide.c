@@ -4313,15 +4313,6 @@ ide_plan(ide_owner_t owners[IDE_BUS_MAX], int mach, const int hdc[], const int s
                 break;
             }
         }
-        for (int c = 0; c < CDROM_NUM; c++) {
-            if (lpt_ports[i].enabled && (cdrom[c].bus_type == CDROM_BUS_LPT) &&
-                (cdrom[c].res == i) && (cdrom[c].lpt_bridge != HDD_LPT_BPCK)) {
-                ide_plan_claim(&plan, 1 << ide_lpt_board(i),
-                               hdd_lpt_bridge_device(cdrom[c].lpt_bridge),
-                               i + 1, 0);
-                break;
-            }
-        }
     }
 
     return shown;

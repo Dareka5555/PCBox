@@ -78,18 +78,6 @@ hdd_string_to_bus(char *str, int cdrom)
     if (!strcmp(str, "scsi"))
         return HDD_BUS_SCSI;
 
-    if (!strcmp(str, "philips") && cdrom)
-        return CDROM_BUS_PHILIPS;
-
-    if (!strcmp(str, "philips_cm100") && cdrom)
-        return CDROM_BUS_CM100;
-
-    if (!strcmp(str, "hitachi") && cdrom)
-        return CDROM_BUS_HITACHI;
-
-    if (!strcmp(str, "mke") && cdrom)
-        return CDROM_BUS_MKE;
-
     /* Removable-mode only: the QIC-117 tape buses. */
     if (!strcmp(str, "lpt") && cdrom)
         return TAPE_BUS_LPT;
@@ -138,26 +126,6 @@ hdd_bus_to_string(int bus, int cdrom)
 
         case HDD_BUS_SCSI:
             s = "scsi";
-            break;
-
-        case CDROM_BUS_PHILIPS:
-            if (cdrom)
-                s = "philips";
-            break;
-
-        case CDROM_BUS_CM100:
-            if (cdrom)
-                s = "philips_cm100";
-            break;
-
-        case CDROM_BUS_HITACHI:
-            if (cdrom)
-                s = "hitachi";
-            break;
-
-        case CDROM_BUS_MKE:
-            if (cdrom)
-                s = "mke";
             break;
 
         /* Removable-mode only: the QIC-117 tape buses. */
