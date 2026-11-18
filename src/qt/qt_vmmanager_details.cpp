@@ -355,9 +355,6 @@ VMManagerDetails::updateConfig(VMManagerSystem *passed_sysconfig)
 
     // Other devices
     otherSection->clear();
-    otherSection->addSection("ISA RTC", passed_sysconfig->getDisplayValue(VMManager::Display::Name::IsaRtc));
-    otherSection->addSection("ISA RAM", passed_sysconfig->getDisplayValue(VMManager::Display::Name::IsaMem));
-    otherSection->addSection("ISA ROM", passed_sysconfig->getDisplayValue(VMManager::Display::Name::IsaRom));
 
     systemSection->setSections();
     videoSection->setSections();

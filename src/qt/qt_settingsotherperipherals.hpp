@@ -49,14 +49,6 @@ private slots:
     void on_comboBoxMemExpCard4_currentIndexChanged(int index);
     void on_pushButtonConfigureMemExpCard4_clicked();
 
-    void on_comboBoxIsaRomCard1_currentIndexChanged(int index);
-    void on_pushButtonConfigureIsaRomCard1_clicked();
-    void on_comboBoxIsaRomCard2_currentIndexChanged(int index);
-    void on_pushButtonConfigureIsaRomCard2_clicked();
-    void on_comboBoxIsaRomCard3_currentIndexChanged(int index);
-    void on_pushButtonConfigureIsaRomCard3_clicked();
-    void on_comboBoxIsaRomCard4_currentIndexChanged(int index);
-    void on_pushButtonConfigureIsaRomCard4_clicked();
 
     void on_checkBoxUnitTester_stateChanged(int arg1);
     void on_pushButtonConfigureUT_clicked();
@@ -72,7 +64,6 @@ private:
     int                           machineId { 0 };
 
     int                           memexp_cfg_changed[4]      = { 0, 0, 0, 0 };
-    int                           isarom_cfg_changed[4]      = { 0, 0, 0, 0 };
     int                           isartc_cfg_changed         = 0;
     int                           isa_expansion_cfg_changed  = 0;
     int                           unittester_cfg_changed     = 0;
@@ -83,7 +74,6 @@ private:
     SettingsCompleter            *scRTC;
 
     SettingsCompleter            *scMemExpCard[4];
-    SettingsCompleter            *scIsaRomCard[4];
 
 #ifdef USE_VFIO
     /* Location, custom ROM enabled and custom ROM file of each device to pass through. */

@@ -36,7 +36,6 @@ extern "C" {
 #include <86box/machine.h>
 #include <86box/mcamem.h>
 #include <86box/isamem.h>
-#include <86box/isarom.h>
 #include <86box/isartc.h>
 #include <86box/ibm_5161.h>
 #include <86box/unittester.h>
@@ -207,11 +206,6 @@ SettingsOtherPeripherals::SettingsOtherPeripherals(QWidget *parent)
         memexp_cfg_changed[i] = 0;
     }
 
-    for (uint8_t i = 0; i < ISAROM_MAX; ++i) {
-        scIsaRomCard[i] = new SettingsCompleter(findChild<QComboBox *>(QString("comboBoxIsaRomCard%1").arg(i + 1)), nullptr);
-        isarom_cfg_changed[i] = 0;
-    }
-
     scRTC           = new SettingsCompleter(ui->comboBoxRTC, nullptr);
     isartc_cfg_changed         = 0;
 
@@ -295,9 +289,6 @@ SettingsOtherPeripherals::~SettingsOtherPeripherals()
     for (uint8_t i = 0; i < ISAMEM_MAX; ++i)
         delete scMemExpCard[i];
 
-    for (uint8_t i = 0; i < ISAROM_MAX; ++i)
-        delete scIsaRomCard[i];
-
     delete scRTC;
 
 #ifdef USE_VFIO
@@ -345,11 +336,6 @@ SettingsOtherPeripherals::onCurrentMachineChanged(int machineId)
             cb->clear();
     }
 
-    for (uint8_t i = 0; i < ISAROM_MAX; ++i) {
-        scIsaRomCard[i]->removeRows();
-        if (auto *cb = findChild<QComboBox *>(QString("comboBoxIsaRomCard%1").arg(i + 1)))
-            cb->clear();
-    }
 
     int selectedRow = 0;
 
@@ -434,39 +420,6 @@ SettingsOtherPeripherals::onCurrentMachineChanged(int machineId)
         findChild<QPushButton *>(QString("pushButtonConfigureMemExpCard%1").arg(i + 1))->setEnabled(device_is_valid(seldev, machineId) && hascfg);
     }
 
-    // ISA ROM Expansion Cards
-    QComboBox          *isarom_cbox[ISAROM_MAX]         = { 0 };
-    QAbstractItemModel *isarom_models[ISAROM_MAX]       = { 0 };
-    int                 isarom_removeRows_[ISAROM_MAX]  = { 0 };
-    int                 isarom_selectedRows[ISAROM_MAX] = { 0 };
-
-    for (uint8_t i = 0; i < ISAROM_MAX; ++i) {
-        isarom_cbox[i]        = findChild<QComboBox *>(QString("comboBoxIsaRomCard%1").arg(i + 1));
-        isarom_models[i]      = isarom_cbox[i]->model();
-        isarom_removeRows_[i] = isarom_models[i]->rowCount();
-    }
-
-    std::vector<Models::Batch> isarom_rows(isarom_models, isarom_models + ISAROM_MAX);
-    for (const auto &card : Models::Devices(isarom_get_device, isarom_get_internal_name, nullptr, 0)) {
-        if (device_is_valid(card.dev, machineId)) {
-            for (uint8_t i = 0; i < ISAROM_MAX; ++i) {
-                int row = isarom_rows[i].add(card.name, card.id);
-                scIsaRomCard[i]->addDevice(card.dev, card.name);
-
-                if (card.id == isarom_type[i])
-                    isarom_selectedRows[i] = row - isarom_removeRows_[i];
-            }
-        }
-    }
-
-    for (uint8_t i = 0; i < ISAROM_MAX; ++i) {
-        isarom_rows[i].commit();
-        isarom_models[i]->removeRows(0, isarom_removeRows_[i]);
-        isarom_cbox[i]->setEnabled(isarom_models[i]->rowCount() > 1);
-        isarom_cbox[i]->setCurrentIndex(-1);
-        isarom_cbox[i]->setCurrentIndex(isarom_selectedRows[i]);
-        findChild<QPushButton *>(QString("pushButtonConfigureIsaRomCard%1").arg(i + 1))->setEnabled((isarom_type[i] != 0) && isarom_has_config(isarom_type[i]) && machineHasIsaOrSidecar);
-    }
 }
 
 int
@@ -501,12 +454,6 @@ SettingsOtherPeripherals::changed()
         }
     }
 
-    /* ISA ROM boards. */
-    for (int i = 0; i < ISAROM_MAX; i++) {
-        auto *cbox     = findChild<QComboBox *>(QString("comboBoxIsaRomCard%1").arg(i + 1));
-        has_changed |= (isarom_type[i]         != cbox->currentData().toInt());
-        has_changed |= isarom_cfg_changed[i];
-    }
 
 #ifdef USE_VFIO
     has_changed |= vfioChanged();
@@ -554,11 +501,6 @@ SettingsOtherPeripherals::save(int soft)
         }
     }
 
-    /* ISA ROM boards. */
-    for (int i = 0; i < ISAROM_MAX; i++) {
-        auto *cbox     = findChild<QComboBox *>(QString("comboBoxIsaRomCard%1").arg(i + 1));
-        isarom_type[i] = cbox->currentData().toInt();
-    }
 
 #ifdef USE_VFIO
     vfioSave();
@@ -676,66 +618,6 @@ SettingsOtherPeripherals::on_pushButtonConfigureMemExpCard4_clicked()
 {
     const bool mca_bus = (machine_has_bus(machineId, MACHINE_BUS_MCA) > 0);
     memexp_cfg_changed[3] |= DeviceConfig::ConfigureDevice(memexp_slot_device(ui->comboBoxMemExpCard4->currentData().toInt(), mca_bus), 4);
-}
-
-void
-SettingsOtherPeripherals::on_comboBoxIsaRomCard1_currentIndexChanged(int index)
-{
-    if (index < 0)
-        return;
-
-    ui->pushButtonConfigureIsaRomCard1->setEnabled((index != 0) && isarom_has_config(index) && hasIsaOrSidecarBus(machineId));
-}
-
-void
-SettingsOtherPeripherals::on_pushButtonConfigureIsaRomCard1_clicked()
-{
-    isarom_cfg_changed[0] |= DeviceConfig::ConfigureDevice(isarom_get_device(ui->comboBoxIsaRomCard1->currentData().toInt()), 1);
-}
-
-void
-SettingsOtherPeripherals::on_comboBoxIsaRomCard2_currentIndexChanged(int index)
-{
-    if (index < 0)
-        return;
-
-    ui->pushButtonConfigureIsaRomCard2->setEnabled((index != 0) && isarom_has_config(index) && hasIsaOrSidecarBus(machineId));
-}
-
-void
-SettingsOtherPeripherals::on_pushButtonConfigureIsaRomCard2_clicked()
-{
-    isarom_cfg_changed[1] |= DeviceConfig::ConfigureDevice(isarom_get_device(ui->comboBoxIsaRomCard2->currentData().toInt()), 2);
-}
-
-void
-SettingsOtherPeripherals::on_comboBoxIsaRomCard3_currentIndexChanged(int index)
-{
-    if (index < 0)
-        return;
-
-    ui->pushButtonConfigureIsaRomCard3->setEnabled((index != 0) && isarom_has_config(index) && hasIsaOrSidecarBus(machineId));
-}
-
-void
-SettingsOtherPeripherals::on_pushButtonConfigureIsaRomCard3_clicked()
-{
-    isarom_cfg_changed[2] |= DeviceConfig::ConfigureDevice(isarom_get_device(ui->comboBoxIsaRomCard3->currentData().toInt()), 3);
-}
-
-void
-SettingsOtherPeripherals::on_comboBoxIsaRomCard4_currentIndexChanged(int index)
-{
-    if (index < 0)
-        return;
-
-    ui->pushButtonConfigureIsaRomCard4->setEnabled((index != 0) && isarom_has_config(index) && hasIsaOrSidecarBus(machineId));
-}
-
-void
-SettingsOtherPeripherals::on_pushButtonConfigureIsaRomCard4_clicked()
-{
-    isarom_cfg_changed[3] |= DeviceConfig::ConfigureDevice(isarom_get_device(ui->comboBoxIsaRomCard4->currentData().toInt()), 4);
 }
 
 void

@@ -55,9 +55,6 @@ extern "C" {
 #include <86box/fdc_ext.h>
 #include <86box/hdc.h>
 #include <86box/gameport.h>
-#include <86box/isartc.h>
-#include <86box/isamem.h>
-#include <86box/isarom.h>
 #include <86box/lpt.h>
 #include <86box/midi.h>
 #include <86box/network.h>
@@ -1204,46 +1201,6 @@ VMManagerSystem::setupVars()
     display_table[VMManager::Display::Name::Serial]   = (serialFinal.empty() ? tr("None") : serialFinal.join((hasSerialDevices ? VMManagerDetailSection::sectionSeparator : ", ")));
     display_table[VMManager::Display::Name::Parallel] = (lptFinal.empty() ? tr("None") : lptFinal.join((hasLptDevices ? VMManagerDetailSection::sectionSeparator : ", ")));
 
-    // ISA RTC
-    QString isartc_dev_name = "";
-    if (other_config.contains("isartc_type")) {
-        auto isartc_internal_name = other_config["isartc_type"];
-        auto isartc_dev           = isartc_get_from_internal_name(isartc_internal_name.toUtf8().data());
-        isartc_dev_name           = DeviceConfig::DeviceName(isartc_get_device(isartc_dev), isartc_get_internal_name(isartc_dev), 0);
-    }
-    display_table[VMManager::Display::Name::IsaRtc] = isartc_dev_name;
-
-    // ISA RAM
-    QStringList IsaMemCards;
-    static auto isamem_match = QRegularExpression("isamem\\d_type", QRegularExpression::CaseInsensitiveOption);
-    for (const auto &key : other_config.keys()) {
-        if (key.contains(isamem_match)) {
-            auto device_number        = QString("%1").arg(key.split("_").at(0).right(1).toInt() + 1);
-            auto isamem_internal_name = QString(other_config[key]);
-            auto isamem_id            = isamem_get_from_internal_name(isamem_internal_name.toUtf8().data());
-            auto isamem_device        = isamem_get_device(isamem_id);
-            auto isamem_name          = DeviceConfig::DeviceName(isamem_device, isamem_get_internal_name(isamem_id), 0);
-            if (!isamem_name.isEmpty())
-                IsaMemCards.append(isamem_name);
-        }
-    }
-    display_table[VMManager::Display::Name::IsaMem] = IsaMemCards.join(VMManagerDetailSection::sectionSeparator);
-
-    // ISA ROM
-    QStringList IsaRomCards;
-    static auto isarom_match = QRegularExpression("isarom\\d_type", QRegularExpression::CaseInsensitiveOption);
-    for (const auto &key : other_config.keys()) {
-        if (key.contains(isarom_match)) {
-            auto device_number        = QString("%1").arg(key.split("_").at(0).right(1).toInt() + 1);
-            auto isarom_internal_name = QString(other_config[key]);
-            auto isarom_id            = isarom_get_from_internal_name(isarom_internal_name.toUtf8().data());
-            auto isarom_device        = isarom_get_device(isarom_id);
-            auto isarom_name          = DeviceConfig::DeviceName(isarom_device, isarom_get_internal_name(isarom_id), 0);
-            if (!isarom_name.isEmpty())
-                IsaRomCards.append(isarom_name);
-        }
-    }
-    display_table[VMManager::Display::Name::IsaRom] = IsaRomCards.join(VMManagerDetailSection::sectionSeparator);
 }
 
 bool

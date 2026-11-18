@@ -59,9 +59,6 @@ namespace Display {
         Keyboard,
         Mouse,
         Tablet,
-        IsaRtc,
-        IsaMem,
-        IsaRom,
         Unknown
     };
     Q_ENUM_NS(Name)

@@ -163,7 +163,14 @@ int
 machine_available(int m)
 {
     int             ret = 0;
-    const device_t *dev = machine_get_device(m);
+    const device_t *dev;
+
+    // A new or incomplete configuration may not specify a machine yet.
+    // Do not index the machine table with an invalid selection.
+    if (m < 0 || m >= machine_count())
+        return 0;
+
+    dev = machine_get_device(m);
 
     if (dev != NULL)
         ret = machine_device_available(dev);

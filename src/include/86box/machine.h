@@ -470,7 +470,6 @@ typedef struct _machine_ {
 
 /* Global variables. */
 extern const machine_filter_t machine_types[];
-extern const machine_filter_t machine_chipsets[];
 extern const machine_t        machines[];
 extern int                    bios_only;
 extern int                    machine;
