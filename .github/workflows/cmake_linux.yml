@@ -12,41 +12,8 @@ name: CMake (Linux)
 # matrix option. Among them are the x86_64 SDL and Qt 5 Dev Debug builds, which
 # the CodeQL workflow already makes.
 
+# Linux builds are manual only; automatic validation is Windows x86_64.
 on:
-
-  push:
-    paths:
-      - src/**
-      - cmake/**
-      - "**/CMakeLists.txt"
-      - "CMakePresets.json"
-      - "!.github/workflows/**"
-      - .github/workflows/cmake_linux.yml
-      - vcpkg.json
-      - "!**/Makefile*"
-
-  # Closing a pull request (including merging it) starts a run that builds
-  # nothing, only cancelling the run in progress through the concurrency
-  # group below
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - closed
-    paths:
-      - src/**
-      - cmake/**
-      - "**/CMakeLists.txt"
-      - "CMakePresets.json"
-      - "!.github/workflows/**"
-      - .github/workflows/cmake_linux.yml
-      - vcpkg.json
-      - "!**/Makefile*"
-
-  schedule:
-    - cron: "0 5 * * 0"
-
   workflow_dispatch:
     inputs:
       full_matrix:
