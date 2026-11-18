@@ -719,8 +719,8 @@ scsi_cdrom_bus_speed(scsi_cdrom_t *dev)
 {
     double ret = -1.0;
 
-    if (dev && dev->drv && scsi_cdrom_on_ide(dev->drv))
-        ret = ide_atapi_get_period(scsi_cdrom_ide_channel(dev->drv));
+    if (dev && dev->drv && (dev->drv->bus_type == CDROM_BUS_ATAPI))
+        ret = ide_atapi_get_period(dev->drv->ide_channel);
 
     if (ret == -1.0) {
         if (dev)
@@ -3625,7 +3625,7 @@ scsi_cdrom_command(scsi_common_t *sc, const uint8_t *cdb)
         case GPCMD_MODE_SENSE_10:
             scsi_cdrom_set_phase(dev, SCSI_PHASE_DATA_IN);
 
-            if (scsi_cdrom_on_ide(dev->drv))
+            if (dev->drv->bus_type == CDROM_BUS_ATAPI)
                 block_desc = 0;
             else
                 block_desc = !((cdb[1] >> 3) & 1);
