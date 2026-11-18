@@ -195,45 +195,107 @@ Harddrives::populateBusChannels(QAbstractItemModel *model, int bus, SettingsBusT
             subChannelWidth = 2;
             busesToCheck.append(HDD_BUS_SCSI);
             break;
-        case HDD_BUS_MFM:
-        case HDD_BUS_XTA:
-        case HDD_BUS_ESDI: {
-            bus_owner_t owner;
-            const int   owned = hdcPlan(&owner, bus);
-
-            busName = QString("%1 %2:%3 %4").arg((bus == HDD_BUS_MFM) ? "MFM/RLL" : ((bus == HDD_BUS_XTA) ? "XTA" : "ESDI"))
-                          .arg(channel >> 1).arg(channel & 1)
-                          .arg(ownerName(channel >> 1, &owner, owned));
-            break;
-        }
-        case HDD_BUS_IDE:
-        case HDD_BUS_ATAPI: {
-            bus_owner_t owners[IDE_BUS_MAX];
-            const int   owned = idePlan(owners);
-
-            busName = QString("%1 %2:%3 %4").arg((bus == HDD_BUS_IDE) ? "IDE" : "ATAPI")
-                          .arg(channel >> 1).arg(channel & 1)
-                          .arg(ownerName(channel >> 1, owners, owned));
-            break;
-        }
-        case HDD_BUS_SCSI: {
-            bus_owner_t owners[SCSI_BUS_MAX];
-            const int   owned = scsiPlan(owners);
-
-            busName = QString("SCSI %1:%2 %3").arg(channel >> 4).arg(channel & 15, 2, 10, QChar('0'))
-                          .arg(ownerName(channel >> 4, owners, owned));
-            break;
-        }
         case TAPE_BUS_FDC:
-            busName = QString("FDC (%1:%2)").arg(channel >> 2).arg(channel & 3);
+            shifter = 2;
+            orer    = 3;
+            busRows = 8;
+            busesToCheck.append(TAPE_BUS_FDC);
             break;
         case TAPE_BUS_LPT:
-            busName = QString("LPT%1").arg(channel + 1);
+            shifter = 0;
+            orer    = 0;
+            busRows = 4;
+            busesToCheck.append(TAPE_BUS_LPT);
+            break;
+        default:
             break;
     }
+    if (sbt != nullptr && !busesToCheck.empty()) {
+        for (auto const &checkBus : busesToCheck) {
+            channelsInUse.append(sbt->busChannelsInUse(checkBus));
+        }
+    }
 
-    return busName;
+    /* A drive left on a board with no controller any more still has its
+       channel listed, so that it shows where it is. */
+    if (is_ide) {
+        for (const int channel : channelsInUse) {
+            if ((channel < IDE_DRIVES_MAX) && (channel >= busRows))
+                busRows = (channel | 1) + 1;
+        }
+    } else if (is_scsi) {
+        for (const int channel : channelsInUse) {
+            if ((channel < (SCSI_BUS_MAX * SCSI_ID_MAX)) && (channel >= busRows))
+                busRows = (channel | 15) + 1;
+        }
+    }
+
+    if ((bus == TAPE_BUS_LPT) && lptBridges) {
+        /* Each port once per bridge; the port is in use either way. */
+        model->insertRows(0, PARALLEL_MAX * HDD_LPT_BRIDGES);
+        for (int i = 0; i < (PARALLEL_MAX * HDD_LPT_BRIDGES); ++i) {
+            const int port   = i / HDD_LPT_BRIDGES;
+            const int bridge = i % HDD_LPT_BRIDGES;
+            auto      idx    = model->index(i, 0);
+
+            model->setData(idx, QString("LPT%1 %2").arg(port + 1).arg(lptBridgeName(bridge)));
+            model->setData(idx, port | (bridge << 2), Qt::UserRole);
+            auto *channelItem = qobject_cast<QStandardItemModel *>(model)->item(i);
+            if (channelItem)
+                channelItem->setEnabled(!channelsInUse.contains(port) && lpt_ports[port].enabled);
+        }
+        return;
+    }
+
+    model->insertRows(0, busRows);
+    for (int i = 0; i < busRows; ++i) {
+        auto idx = model->index(i, 0);
+        if (bus == TAPE_BUS_LPT)
+            model->setData(idx, QString("LPT%1").arg(i + 1));
+        else if (is_ide)
+            model->setData(idx, QString("%1:%2 %3").arg(i >> 1).arg(i & 1).arg(ownerName(i >> 1, owners, owned, conflicts, conflictCount)));
+        else if (is_scsi)
+            model->setData(idx, QString("%1:%2 %3").arg(i >> 4).arg(i & 15, 2, 10, QChar('0')).arg(ownerName(i >> 4, owners, owned)));
+        else if (is_hdc)
+            model->setData(idx, QString("%1:%2 %3").arg(i >> 1).arg(i & 1).arg(ownerName(i >> 1, owners, owned)));
+        else
+            model->setData(idx, QString("%1:%2").arg(i >> shifter).arg(i & orer, subChannelWidth, 10, QChar('0')));
+        model->setData(idx, ((i >> shifter) << shifter) | (i & orer), Qt::UserRole);
+        const auto *channelModel = qobject_cast<QStandardItemModel *>(model);
+        auto       *channelItem  = channelModel->item(i);
+        if (channelItem) {
+            bool enabled = !channelsInUse.contains(i);
+            if ((bus == TAPE_BUS_LPT) && (i < PARALLEL_MAX) && !lpt_ports[i].enabled)
+                enabled = false;
+            if (is_ide && !owners[i >> 1].onboard && (owners[i >> 1].device == nullptr))
+                enabled = false;
+            if (is_scsi && (((i >> 4) >= owned) || (!owners[i >> 4].onboard && (owners[i >> 4].device == nullptr))))
+                enabled = false;
+            channelItem->setEnabled(enabled);
+        }
+    }
+
+    if (bus != HDD_BUS_DISABLED) {
+        const int row = model->rowCount();
+        model->insertRow(row);
+        model->setData(model->index(row, 0), QObject::tr("(Disconnected)"));
+        model->setData(model->index(row, 0), CHANNEL_NONE, Qt::UserRole);
+    }
+
+    /* Then, not to be picked, each controller left without its channels. */
+    if (is_ide) {
+        auto *standard = qobject_cast<QStandardItemModel *>(model);
+
+        for (int i = 0; (standard != nullptr) && (i < conflictCount); i++) {
+            auto *item = new QStandardItem(conflictText(i, owners, owned, conflicts, conflictCount));
+
+            item->setData(CHANNEL_NONE, Qt::UserRole);
+            item->setEnabled(false);
+            standard->appendRow(item);
+        }
+    }
 }
+
 
 /* The owner of each IDE board for what the settings hold now: the machine,
    disk controllers and sound cards selected, or those saved for a page not
@@ -379,6 +441,61 @@ Harddrives::conflictText(int index, const bus_owner_t *owners, int count, const 
     return (boards.size() == 1) ? QObject::tr("%1: channel %2 in use").arg(label, boards.first()) :
                                   QObject::tr("%1: channels %2 in use").arg(label, boards.join(", "));
 }
+
+QString
+Harddrives::BusChannelName(uint8_t bus, uint8_t channel)
+{
+    if (bus != HDD_BUS_DISABLED && channel == CHANNEL_NONE)
+        return QObject::tr("(Disconnected)");
+
+    QString busName;
+    switch (bus) {
+        case HDD_BUS_DISCONNECTED:
+            busName = QObject::tr("(Disconnected)");
+            break;
+        case HDD_BUS_DISABLED:
+            busName = QString(QObject::tr("Disabled"));
+            break;
+        case HDD_BUS_MFM:
+        case HDD_BUS_XTA:
+        case HDD_BUS_ESDI: {
+            bus_owner_t owner;
+            const int   owned = hdcPlan(&owner, bus);
+
+            busName = QString("%1 %2:%3 %4").arg((bus == HDD_BUS_MFM) ? "MFM/RLL" : ((bus == HDD_BUS_XTA) ? "XTA" : "ESDI"))
+                          .arg(channel >> 1).arg(channel & 1)
+                          .arg(ownerName(channel >> 1, &owner, owned));
+            break;
+        }
+        case HDD_BUS_IDE:
+        case HDD_BUS_ATAPI: {
+            bus_owner_t owners[IDE_BUS_MAX];
+            const int   owned = idePlan(owners);
+
+            busName = QString("%1 %2:%3 %4").arg((bus == HDD_BUS_IDE) ? "IDE" : "ATAPI")
+                          .arg(channel >> 1).arg(channel & 1)
+                          .arg(ownerName(channel >> 1, owners, owned));
+            break;
+        }
+        case HDD_BUS_SCSI: {
+            bus_owner_t owners[SCSI_BUS_MAX];
+            const int   owned = scsiPlan(owners);
+
+            busName = QString("SCSI %1:%2 %3").arg(channel >> 4).arg(channel & 15, 2, 10, QChar('0'))
+                          .arg(ownerName(channel >> 4, owners, owned));
+            break;
+        }
+        case TAPE_BUS_FDC:
+            busName = QString("FDC (%1:%2)").arg(channel >> 2).arg(channel & 3);
+            break;
+        case TAPE_BUS_LPT:
+            busName = QString("LPT%1").arg(channel + 1);
+            break;
+    }
+
+    return busName;
+}
+
 
 /* Name each drive's bus and channel again, from the bus and channel kept
    with it in column 0: who has an IDE channel may have changed. */
