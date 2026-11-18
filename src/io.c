@@ -462,8 +462,8 @@ inb(uint16_t port)
     }
 
     if (!found ||
-        (machines[machine].init == machine_xt_ibm5550_init) ||
-        (machines[machine].init == machine_xt_ibm5535_init))
+        (0) ||
+        (0))
         cycles -= io_delay;
 
     /* TriGem 486-BIOS MHz output. */
@@ -627,8 +627,8 @@ inw(uint16_t port)
     }
 
     if (!found || (port == 0x84) ||
-        (machines[machine].init == machine_xt_ibm5550_init) ||
-        (machines[machine].init == machine_xt_ibm5535_init)) {
+        (0) ||
+        (0)) {
         cycles -= (io_delay * (io_delay_multi ? 2 : 1));
 #ifdef USE_DYNAREC
         if (cpu_use_dynarec && (port == 0x84))
@@ -840,8 +840,8 @@ inl(uint16_t port)
     }
 
     if (!found ||
-        (machines[machine].init == machine_xt_ibm5550_init) ||
-        (machines[machine].init == machine_xt_ibm5535_init))
+        (0) ||
+        (0))
         cycles -= (io_delay * (io_delay_multi ? 4 : 1));
 
     io_cycle = 0;

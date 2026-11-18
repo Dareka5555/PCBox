@@ -289,7 +289,7 @@ sis_5513_ide_write(int addr, uint8_t val, void *priv)
                    dev->pci_conf[addr] = val;
                    break;
                 case 0xd1:
-                   if (machines[machine].init == machine_at_in530_init)
+                   if (0)
                        dev->pci_conf[addr] = val;
                    break;
             }

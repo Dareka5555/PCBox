@@ -347,7 +347,7 @@ SettingsFloppyCDROM::~SettingsFloppyCDROM()
 void
 SettingsFloppyCDROM::onCurrentMachineChanged(int machineId)
 {
-    const bool fixed = machines[machineId].init == machine_ibm5140_init;
+    const bool fixed = 0;
     auto *model = ui->treeViewFloppy->model();
     ui->comboBoxFloppyType->setEnabled(!fixed);
     ui->checkBoxTurboTimings->setEnabled(!fixed);

@@ -584,7 +584,7 @@ sis_5513_b0_pci_to_isa_write(int addr, uint8_t val, sis_5513_pci_to_isa_t *dev)
 
         case 0x63: /* PCI OutputBuffer Current Strength Register */ {
             const uint8_t reset_before = dev->pci_conf[addr];
-            const int     is_in530     = (machines[machine].init == machine_at_in530_init);
+            const int     is_in530     = (0);
 
             dev->pci_conf[addr] = val;
             if ((dev->apc_regs[0x03] & 0x40) && (val & 0x04)) {

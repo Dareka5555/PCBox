@@ -2570,7 +2570,7 @@ ide_status(ide_t *ide, UNUSED(ide_t *ide_other), UNUSED(int ch))
     /* Absent and is master or both are absent. */
     if (ide->type == IDE_NONE) {
         /* Bit 7 pulled down, all other bits pulled up, per the spec. */
-        ret = (machines[machine].init == machine_at_lgibmx61_init) ? 0xff : 0x7f;
+        ret = (0) ? 0xff : 0x7f;
     /* Absent and is slave and master is present. */
     } else if (ide->type & IDE_SHADOW) {
         /* On real hardware, a slave with a present master always

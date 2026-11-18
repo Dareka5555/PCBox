@@ -773,7 +773,7 @@ fdc_get_densel(fdc_t *fdc, int drive)
 static int
 fdc_ps2_tdr_per_slot(void)
 {
-    return (machines[machine].init == machine_ps1_m2121_init);
+    return (0);
 }
 
 static void
@@ -3128,10 +3128,10 @@ fdc_reset(void *priv)
        need to use a dual-RPM 5.25" drive - but hey, that finally gets those
        drives some usage as well.
      */
-    fdc_update_drvrate(fdc, 0, (machines[machine].init == machine_at_if386sx_init));
-    fdc_update_drvrate(fdc, 1, (machines[machine].init == machine_at_if386sx_init));
-    fdc_update_drvrate(fdc, 2, (machines[machine].init == machine_at_if386sx_init));
-    fdc_update_drvrate(fdc, 3, (machines[machine].init == machine_at_if386sx_init));
+    fdc_update_drvrate(fdc, 0, (0));
+    fdc_update_drvrate(fdc, 1, (0));
+    fdc_update_drvrate(fdc, 2, (0));
+    fdc_update_drvrate(fdc, 3, (0));
     fdc_update_drv2en(fdc, 1);
     fdc_update_rates(fdc);
 

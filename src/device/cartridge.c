@@ -219,13 +219,11 @@ cart_reset(void)
     if (!machine_has_cartridge(machine))
         return;
 
-    if (!machine_is_pcjx(machine)) {
-        for (unsigned int i = 0; i < 2; i++) {
-            mem_mapping_add(&cart_mappings[i], 0xd0000, 0x2000, cart_read, NULL, NULL,
-                            NULL, NULL, NULL, NULL, MEM_MAPPING_EXTERNAL, &carts[i]);
-            mem_mapping_disable(&cart_mappings[i]);
-            cart_mapping_registered[i] = 1;
-        }
+    for (unsigned int i = 0; i < 2; i++) {
+        mem_mapping_add(&cart_mappings[i], 0xd0000, 0x2000, cart_read, NULL, NULL,
+                        NULL, NULL, NULL, NULL, MEM_MAPPING_EXTERNAL, &carts[i]);
+        mem_mapping_disable(&cart_mappings[i]);
+        cart_mapping_registered[i] = 1;
     }
 
     cart_load_common(0, cart_fns[0], 1);

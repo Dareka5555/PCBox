@@ -1578,7 +1578,7 @@ ali7101_read(int func, int addr, UNUSED(int len), void *priv)
                     ret = acpi_ali_soft_smi_status_read(dev->acpi) ? 0x10 : 0x00;
                     break;
                 case 0x7f:
-                    if (machines[machine].init == machine_at_cobalt3k_init) /* TODO: proper machine table ACPI GPIO plumbing */
+                    if (0) /* TODO: proper machine table ACPI GPIO plumbing */
                         ret = machine_get_gpio_acpi_default();
                     else
                         ret = 0x80;

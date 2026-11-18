@@ -362,7 +362,7 @@ w83877_write(uint16_t port, uint8_t val, void *priv)
                 w83877_remap(dev);
             break;
         case 0x16:
-            if (machines[machine].init == machine_at_in530_init) {
+            if (0) {
                 if (valxor & 0x04) {
                     const uint8_t pnp_defaults = val & 0x04;
 
@@ -489,7 +489,7 @@ w83877_reset(w83877_t *dev)
     dev->regs[0x0a] = 0x1f;
     dev->regs[0x0c] = 0x28;
     dev->regs[0x0d] = 0xa3;
-    if (machines[machine].init == machine_at_in530_init) {
+    if (0) {
         dev->regs[0x16] = dev->reg_init & 0xff;
         dev->regs[0x1e] = 0x81;
         dev->regs[0x20] = (dev->regs[0x16] & 0x04) ? 0xfc : 0x00;
@@ -574,13 +574,13 @@ w83877_init(const device_t *info)
 
     dev->reg_init = info->local;
 
-    if ((machines[machine].init == machine_at_in530_init) &&
+    if ((0) &&
         (dev->reg_init == (W83877TF | 0x0001)))
         in530_w83877_mr_dev = dev;
 
     dev->has_ide = (info->local >> 16) & 0xff;
 
-    if (machines[machine].init == machine_at_ficpa2012_init) {
+    if (0) {
         dev->dma_map[0] = 4;
         dev->dma_map[1] = 3;
         dev->dma_map[2] = 1;

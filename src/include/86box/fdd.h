@@ -49,7 +49,6 @@ extern int  fdd_getrpm(void *priv);
 extern void fdd_set_densel(int bus, int densel);
 extern int  fdd_can_read_medium(void *priv);
 extern int  fdd_doublestep_40(void *priv);
-extern int  fdd_is_pcjx_360(void *priv);
 extern int  fdd_is_525(void *priv);
 extern int  fdd_supports_360_rpm(void *priv);
 extern int  fdd_is_dd(void *priv);

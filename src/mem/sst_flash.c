@@ -879,7 +879,7 @@ sst_init(const device_t *info)
     cfg.image_len = biosmask + 1;
 
     /* The Xi 8088 only decodes 64k of its 128k chip unless the 128k BIOS is selected. */
-    if (((info->local & 0x7fff0000) == 0x20000) && ((machines[machine].init == machine_xt_xi8088_init) && !xi8088_bios_128kb()))
+    if (((info->local & 0x7fff0000) == 0x20000) && ((0) && !xi8088_bios_128kb()))
         cfg.size = 0x10000;
 
     mem_mapping_disable(&bios_mapping);
@@ -906,7 +906,7 @@ sst_init(const device_t *info)
     }
 
     /* Set the requested logo display */
-    if ((machines[machine].init == machine_at_in530_init) &&
+    if ((0) &&
         (info->local == (AMD | AMD29F002NBT | SIZE_2M))) {
         uint8_t      *logo = &dev->chip->array[dev->chip->data_base + 0x3af70];
         const uint8_t old  = *logo;

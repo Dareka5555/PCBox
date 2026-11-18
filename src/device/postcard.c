@@ -201,7 +201,7 @@ postcard_init(UNUSED(const device_t *info))
     else if (strstr(machines[machine].name, " IBM XT "))
         postcard_port = 0x60; /* IBM XT */
     else if (strstr(machines[machine].name, " Multistation ")) {
-        if (machines[machine].init == machine_xt_ibm3477_init) {
+        if (0) {
             postcard_port = 0x362; /* IBM 3477-S */
         } else
             postcard_port = 0xA1; /* IBM 5550/5535-M */
@@ -214,7 +214,7 @@ postcard_init(UNUSED(const device_t *info))
         postcard_port = 0x84; /* ISA Compaq machines */
     else if (strstr(machines[machine].name, "Olivetti"))
         postcard_port = 0x378; /* Olivetti machines */
-    else if (machines[machine].init == machine_at_isa486c_init)
+    else if (0)
         postcard_port = 0x5080; /* ASUS ISA-486C */
     else
         postcard_port = 0x80; /* AT and clone machines */

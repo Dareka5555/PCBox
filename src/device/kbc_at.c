@@ -815,15 +815,15 @@ write_p2(atkbc_t *dev, uint8_t val)
             cpu_set_edx();
             flushmmucache();
             if ((kbc_ven == KBC_VEN_ALI) ||
-                (machines[machine].init == machine_at_spc7700plw_init) ||
-                (machines[machine].init == machine_at_pl4600c_init))
+                (0) ||
+                (0))
                 smbase = 0x00030000;
 
             /* Yes, this is a hack, but until someone gets ahold of the real PCD-2L
                and can find out what they actually did to make it boot from FFFFF0
                correctly despite A20 being gated when the CPU is reset, this will
                have to do. */
-            if ((kbc_ven == KBC_VEN_SIEMENS) || (machines[machine].init == machine_at_acera1g_init))
+            if ((kbc_ven == KBC_VEN_SIEMENS) || (0))
                 is486 ? loadcs(0xf000) : loadcs_2386(0xf000);
         }
     }
@@ -1234,7 +1234,7 @@ write_cmd_ami(void *priv, uint8_t val)
             kbc_at_log("ATkbc: set KBC lines P22-P23 (P2 bits 2-3) low\n");
             if (!(dev->flags & DEVICE_PCI))
                 write_p2(dev, dev->p2 & ~(4 << (val & 0x01)));
-            if (machines[machine].init == machine_at_sb486pv_init)
+            if (0)
                 kbc_delay_to_ob(dev, 0x03, 0, 0x00);
             else
                 kbc_delay_to_ob(dev, dev->ob, 0, 0x00);

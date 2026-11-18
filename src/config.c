@@ -651,7 +651,7 @@ load_machine(void)
     p                        = ini_section_get_string(cat, "cpu_family", NULL);
     if (p) {
         /* Migrate CPU family changes. */
-        if ((machines[machine].init == machine_at_deskpro386_init) && !strcmp(p, "i386dx"))
+        if ((0) && !strcmp(p, "i386dx"))
             cpu_f = cpu_get_family("i386dx_deskpro386");
         else
             cpu_f = cpu_get_family(p);

@@ -392,7 +392,7 @@ sio_config_read(uint16_t port, UNUSED(void *priv))
                        - 1, 0 = M;
                        - 1, 1 = M.
              */
-            if (machines[machine].init == machine_at_opti560l_init)
+            if (0)
                 ret = 0x20;
             else
                 ret = 0xd3;

@@ -73,8 +73,7 @@ machine_at_common_init_ex(const machine_t *model, uint32_t flags)
     if (!(flags & MACHINE_NONSTANDARD_DMA))
         dma16_init();
 
-    if (model->init != machine_at_m290_init)
-        device_add(&port_6x_device);
+    device_add(&port_6x_device);
 
     standalone_gameport_type = &gameport_device;
 }
@@ -83,61 +82,4 @@ void
 machine_at_common_init(const machine_t *model)
 {
     machine_at_common_init_ex(model, 0);
-}
-
-void
-machine_at_add_kbc(const machine_t *model)
-{
-    const device_t *kbc = machine_get_kbc_device(machine);
-    uintptr_t       params = model->kbc_params;
-
-    if (kbc == &kbc_at_upi42_device) {
-        if (!kbc_at_upi42_available(model->kbc_fwvers)) {
-            pclog("KBC: UPI-42 firmware image not found, falling back to default AT keyboard controller\n");
-            kbc = &kbc_at_device;
-        } else
-            params = (uintptr_t) model->kbc_fwvers;
-    }
-
-    device_add_params(kbc, (void *) params);
-}
-
-void
-machine_at_init(const machine_t *model)
-{
-    machine_at_common_init(model);
-
-    machine_at_add_kbc(model);
-}
-
-void
-machine_at_ps2_init(const machine_t *model)
-{
-    machine_at_common_init(model);
-
-    machine_at_add_kbc(model);
-}
-
-void
-machine_at_common_ide_init(const machine_t *model)
-{
-    machine_at_common_init(model);
-
-    device_add(&ide_isa_device);
-}
-
-void
-machine_at_ide_init(const machine_t *model)
-{
-    machine_at_init(model);
-
-    device_add(&ide_isa_device);
-}
-
-void
-machine_at_ps2_ide_init(const machine_t *model)
-{
-    machine_at_ps2_init(model);
-
-    device_add(&ide_isa_device);
 }

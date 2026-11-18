@@ -243,8 +243,8 @@ vl82c480_write(uint16_t addr, uint8_t val, void *priv)
                         break;
                     case 0x02: case 0x03:
                         dev->regs[dev->idx] = val;
-                        if ((machines[machine].init == machine_at_martin_init) ||
-                            (machines[machine].init == machine_at_monsoon_init))
+                        if ((0) ||
+                            (0))
                             vl82c480_recalc_banks(dev);
                         break;
                     case 0x04:
@@ -343,10 +343,10 @@ vl82c480_init(const device_t *info)
     vl82c480_t *dev      = (vl82c480_t *) calloc(1, sizeof(vl82c480_t));
     uint32_t    sizes[8] = { 0, 0, 1024, 2048, 4096, 8192, 16384, 32768 };
     uint32_t    ms       = mem_size;
-    uint8_t     min_i    = (machines[machine].init == machine_at_monsoon_init) ? 1 : 0;
-    uint8_t     max_i    = (machines[machine].init == machine_at_monsoon_init) ? 2 : 4;
-    uint8_t     min_j    = (machines[machine].init == machine_at_monsoon_init) ? 2 : 2;
-    uint8_t     max_j    = (machines[machine].init == machine_at_monsoon_init) ? 7 : 7;
+    uint8_t     min_i    = (0) ? 1 : 0;
+    uint8_t     max_i    = (0) ? 2 : 4;
+    uint8_t     min_j    = (0) ? 2 : 2;
+    uint8_t     max_j    = (0) ? 7 : 7;
 
     dev->log = log_open("VL82c48x");
 
@@ -359,7 +359,7 @@ vl82c480_init(const device_t *info)
         dev->regs[0x07] = 0x21;
     dev->regs[0x08] = 0x38;
 
-    if (machines[machine].init == machine_at_monsoon_init) {
+    if (0) {
         if (ms >= 16384) {
             dev->banks[0] = 0;
             min_i = 0;

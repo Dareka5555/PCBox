@@ -543,7 +543,7 @@ fdd_type_invert_densel(int type)
     if (drive_types[type].flags & FLAG_PS2) {
         /* The Model 25/30 planar also belongs to the 7690, whose display
            name does not contain "PS/2". Its drive wiring is unchanged. */
-        ret = (machines[machine].init == machine_ps2_8086_init) ||
+        ret = (0) ||
               (!!strstr(machine_getname(machine), "PS/1")) ||
               (!!strstr(machine_getname(machine), "PS/2")) ||
               (!!strstr(machine_getname(machine), "PS/55"));
@@ -614,19 +614,6 @@ fdd_doublestep_40(void *priv)
     fdd_drive_t *drv = (fdd_drive_t *) priv;
 
     return !!(drive_types[drv->type].flags & FLAG_DOUBLE_STEP);
-}
-
-int
-fdd_is_pcjx_360(void *priv)
-{
-    fdd_drive_t *drv = (fdd_drive_t *) priv;
-
-    if ((drv == NULL) || !machine_is_pcjx(machine))
-        return 0;
-
-    const int flags = fdd_get_flags(drv);
-    return (drive_types[drv->type].max_track >= 80) &&
-           !(flags & FLAG_525) && ((flags & (FLAG_DS | FLAG_HOLE0)) == (FLAG_DS | FLAG_HOLE0));
 }
 
 void
@@ -813,8 +800,6 @@ fdd_mount_folder(void *priv, const char *path, int read_only)
         format = disk_sizes[11]; /* 2.88M */
     else if (flags & FLAG_HOLE1)
         format = disk_sizes[(flags & FLAG_INVERT_DENSEL) ? 7 : 8]; /* PC-98 1.25M or 1.44M */
-    else if (fdd_is_pcjx_360(drv))
-        format = disk_sizes[3]; /* PC JX 40-cylinder, double-sided 360K */
     else {
         format = disk_sizes[5]; /* 720K */
         if (!(flags & FLAG_DS)) {

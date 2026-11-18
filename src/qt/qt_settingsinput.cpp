@@ -248,7 +248,7 @@ SettingsInput::onCurrentMachineChanged(int machineId)
         const auto *dev  = keyboard_get_device(i);
         int         ikbd = (i == KEYBOARD_TYPE_INTERNAL);
 
-        bool pc5086_filter = (strstr(keyboard_get_internal_name(i), "ps") && machines[machineId].init == machine_xt_pc5086_init);
+        bool pc5086_filter = (strstr(keyboard_get_internal_name(i), "ps") && 0);
 
         if ((ikbd != has_int_kbd) || !device_is_valid(dev, machineId) || pc5086_filter)
             continue;

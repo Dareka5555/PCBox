@@ -105,7 +105,7 @@ i4x0_map(i4x0_t *dev, uint32_t addr, uint32_t size, int state)
          * IBM PC 7x0 BIOS switches F0000h from shadow RAM back to ROM this way
          * when it restarts.
          */
-        if ((machines[machine].init == machine_at_ibm_pc700_init) && (cr0 & (1 << 30)))
+        if ((0) && (cr0 & (1 << 30)))
             flushmmucache();
         else
             flushmmucache_nopc();
@@ -854,12 +854,12 @@ i4x0_write(int func, int addr, UNUSED(int len), uint8_t val, void *priv)
             case 0x63:
             case 0x64:
                 if ((addr & 0x7) <= dev->max_drb) {
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         dev->drb_written[addr & 0x7] = val;
                     dev->write_drbs(regs, 0x60, 0x60 + dev->max_drb, dev->drb_unit);
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         i4x0_drb_row0_update(dev);
                     break;
                 }
@@ -889,12 +889,12 @@ i4x0_write(int func, int addr, UNUSED(int len), uint8_t val, void *priv)
                 break;
             case 0x65:
                 if ((addr & 0x7) <= dev->max_drb) {
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         dev->drb_written[addr & 0x7] = val;
                     dev->write_drbs(regs, 0x60, 0x60 + dev->max_drb, dev->drb_unit);
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         i4x0_drb_row0_update(dev);
                     break;
                 }
@@ -924,12 +924,12 @@ i4x0_write(int func, int addr, UNUSED(int len), uint8_t val, void *priv)
                 break;
             case 0x66:
                 if ((addr & 0x7) <= dev->max_drb) {
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         dev->drb_written[addr & 0x7] = val;
                     dev->write_drbs(regs, 0x60, 0x60 + dev->max_drb, dev->drb_unit);
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         i4x0_drb_row0_update(dev);
                     break;
                 }
@@ -950,12 +950,12 @@ i4x0_write(int func, int addr, UNUSED(int len), uint8_t val, void *priv)
                 break;
             case 0x67:
                 if ((addr & 0x7) <= dev->max_drb) {
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         dev->drb_written[addr & 0x7] = val;
                     dev->write_drbs(regs, 0x60, 0x60 + dev->max_drb, dev->drb_unit);
-                    if ((machines[machine].init == machine_at_rc440bx_init) ||
-                        (machines[machine].init == machine_at_borapro_init))
+                    if ((0) ||
+                        (0))
                         i4x0_drb_row0_update(dev);
                     break;
                 }
@@ -1661,7 +1661,7 @@ i4x0_read(int func, int addr, UNUSED(int len), void *priv)
            with the addition of bits 3 and 0. */
         if ((func == 0) && (addr == 0x93) && ((dev->type == INTEL_440FX) || (dev->type == INTEL_440LX) || (dev->type == INTEL_440EX)))
             ret = (ret & 0xf9) | (pci_read(0x0cf9, NULL) & 0x06);
-        else if ((func == 0) && (addr == 0x52) && (dev->type == INTEL_430TX) && (machines[machine].init == machine_at_tomahawk_init))
+        else if ((func == 0) && (addr == 0x52) && (dev->type == INTEL_430TX) && (0))
             ret = 0xb2;
     }
 
@@ -1685,14 +1685,14 @@ i4x0_reset(void *priv)
         i4x0_write(0, 0x5a + i, 1, 0x00, priv);
 
     for (uint8_t i = 0; i <= dev->max_drb; i++) {
-        if ((machines[machine].init == machine_at_rc440bx_init) ||
-            (machines[machine].init == machine_at_borapro_init))
+        if ((0) ||
+            (0))
             dev->regs[0x60 + i] = dev->drb_written[i] = dev->drb_default;
         else
             dev->regs[0x60 + i] = dev->drb_default;
     }
-    if ((machines[machine].init == machine_at_rc440bx_init) ||
-        (machines[machine].init == machine_at_borapro_init))
+    if ((0) ||
+        (0))
         i4x0_drb_row0_update(dev);
 
     if (dev->type >= INTEL_430NX) {
@@ -2054,8 +2054,8 @@ i4x0_init(const device_t *info)
     else if (dev->type >= INTEL_440LX)
         cpu_set_agp_speed(cpu_busspeed);
 
-    if ((machines[machine].init == machine_at_rc440bx_init) ||
-        (machines[machine].init == machine_at_borapro_init))
+    if ((0) ||
+        (0))
         memcpy(dev->drb_written, &regs[0x60], sizeof(dev->drb_written));
 
     i4x0_write(regs[0x59], 0x59, 1, 0x00, dev);

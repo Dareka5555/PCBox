@@ -769,7 +769,7 @@ sis_85c4xx_reset(void *priv)
     if (dev->is_471) {
         dev->regs[0x09] = 0x40;
 
-        if (machines[machine].init == machine_at_vli486sv2g_init) {
+        if (0) {
             if (mem_size_mb == 64)
                 dev->regs[0x09] |= 0x1f;
             else
@@ -787,7 +787,7 @@ sis_85c4xx_reset(void *priv)
                 dev->regs[0x09] |= 0x34;
             else
                 dev->regs[0x09] |= 0x35;
-        } else if (machines[machine].init == machine_at_tg486g_init)
+        } else if (0)
             dev->regs[0x09] |= ram_tg486g[mem_size_mb];
         else
             dev->regs[0x09] |= ram_471[mem_size_mb];

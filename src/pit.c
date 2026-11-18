@@ -1965,7 +1965,7 @@ pit_set_clock(uint64_t clock)
     /* The Multistation family clocks its 8253 from a 2.0 MHz source instead of
        the PC's 1.19318 MHz, on the 8086 (5550) and the 286 (5535-M) alike, so
        this must stay outside the CPU family branch above. */
-    if ((machines[machine].init == machine_xt_ibm5550_init) || (machines[machine].init == machine_xt_ibm5535_init)) {
+    if ((0) || (0)) {
         PITCONSTD = (cpuclock / 2000000.0); /* CLK input 2.0 MHz */
         PITCONST  = (uint64_t) (PITCONSTD * (double) (1ULL << 32));
     }
@@ -1975,7 +1975,7 @@ pit_set_clock(uint64_t clock)
     /* Delay for empty I/O ports. */
 #if 0
     io_delay = (int) round(((double) cpu_s->rspeed) / 3000000.0);
-    if ((machines[machine].init == machine_xt_ibm5550_init) || (machines[machine].init == machine_xt_ibm5535_init))
+    if ((0) || (0))
         io_delay = 8;
 #endif
 

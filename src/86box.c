@@ -2106,7 +2106,7 @@ pc_reset_hard_init(void)
         device_add(&postcard_device);
     if (unittester_enabled)
         device_add(&unittester_device);
-    if (softpower_enabled && (machines[machine].init != machine_ibm5140_init))
+    if (softpower_enabled && (1))
         device_add(&softpower_device);
 
     if (novell_keycard_enabled)

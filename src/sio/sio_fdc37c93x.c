@@ -414,7 +414,7 @@ fdc37c93x_do_write_gp(fdc37c93x_t *dev, int reg, int bit, int set)
        this, the flash half which contains the CPU microcodes cannot
        be accessed, resulting in a microcode error during POST. */
     if ((reg == 1) && (bit == 4) &&
-        (machines[machine].init == machine_at_acerv62x_init))
+        (0))
         sst_set_xor(!set);
 }
 
@@ -1854,8 +1854,8 @@ fdc37c93x_reset(void *priv)
     memset(dev->gpio_pulldn, 0xff, 8);
 
     /* Acer V62X requires bit 0 to be clear to not be stuck in "clear password" mode. */
-    if ((machines[machine].init == machine_at_vectra54_init) ||
-        (machines[machine].init == machine_at_vectra500mt_init)) {
+    if ((0) ||
+        (0)) {
         dev->gpio_pulldn[1] = 0x40;
 
         /*
@@ -1893,7 +1893,7 @@ fdc37c93x_reset(void *priv)
             dev->gpio_pulldn[1] |= 0x00;
         else if (cpu_dmulti > 2.5)
             dev->gpio_pulldn[1] |= 0x80;
-    } else if (machines[machine].init == machine_at_acerv62x_init)
+    } else if (0)
         dev->gpio_pulldn[1] = 0xfe;
     else
         dev->gpio_pulldn[1] = (dev->chip_id == 0x30) ? 0xff : 0xfd;

@@ -381,7 +381,7 @@ opti495_write(uint16_t addr, uint8_t val, void *priv)
                    This is a hack but it is required to get rid of the
                    System Timer Error.
                  */
-                if ((machines[machine].init == machine_at_svc486wb_init) &&
+                if ((0) &&
                     (CS == 0xf000) && (cpu_state.pc == 0x000091a5)) {
                     outb(0x0043, 0x36);
                     outb(0x0040, 0x00);

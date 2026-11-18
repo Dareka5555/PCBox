@@ -416,18 +416,6 @@ interleave(int sector, int skew, int track_spt)
     return (int) adjusted_r;
 }
 
-/* Only the JX's 40-cylinder raw DD media leaves every other physical track blank. */
-static int
-img_is_pcjx_360(void *priv, const img_t *dev)
-{
-    fdd_drive_t *drv = (fdd_drive_t *) priv;
-
-    return fdd_is_pcjx_360(drv) && !dev->is_ioctl && !dev->is_cqm &&
-           (!dev->disk_at_once || drv->folder_image) && !dev->base && (dev->tracks == 40) &&
-           (dev->sides == 2) && ((dev->sectors == 8) || (dev->sectors == 9)) &&
-           (dev->sector_size == 2);
-}
-
 static void
 write_back(void *priv)
 {
@@ -632,16 +620,12 @@ img_seek(void *priv, int track)
     if (dev->fp == NULL && !dev->is_ioctl && !drv->folder_image)
         return;
 
-    const int pcjx_360     = img_is_pcjx_360(drv, dev);
-
     dev->physical_track = track;
-    if (pcjx_360)
-        track = ((track >= 0) && (track <= 78) && !(track & 1)) ? track / 2 : -1;
-    else if ((track >= 0) && !dev->track_width && fdd_is_525(drv) && fdd_doublestep_40(drv))
+    if ((track >= 0) && !dev->track_width && fdd_is_525(drv) && fdd_doublestep_40(drv))
         track /= 2;
 
     dev->track = track;
-    d86f_set_cur_track(drv, pcjx_360 ? dev->physical_track : track);
+    d86f_set_cur_track(drv, track);
 
     /* Retire both the flux and turbo views before any early return or I/O. */
     d86f_reset_index_hole_pos(drv, 0);
@@ -813,20 +797,6 @@ img_readaddress(void *priv, const int side, const int density)
 {
     fdd_drive_t *drv = (fdd_drive_t *) priv;
     const img_t *dev = (img_t *) drv->local;
-
-    /*
-     * The common turbo engine returns its saved ID rather than scanning flux.
-     * Supply the selected side's real ID, and never reuse it on a blank track.
-     */
-    if (fdd_get_turbo(drv) && fdd_is_pcjx_360(drv) && !dev->xdf_type) {
-        if ((dev->track < 0) || (dev->track >= dev->tracks) ||
-            (side < 0) || (side >= dev->sides)) {
-            drv->ctrl->noidam(drv->ctrl_priv);
-            return;
-        }
-        const uint8_t *id = dev->first_sector_id[side];
-        d86f_initialize_last_sector_id(drv, id[0], id[1], id[2], id[3]);
-    }
     d86f_readaddress(drv, side, density);
 }
 

@@ -5164,7 +5164,7 @@ gd54xx_init(const device_t *info)
             break;
 
         case CIRRUS_ID_CLGD5424:
-            if ((local & 0x200) && (machines[machine].init == machine_at_advantage40xxd_init))
+            if ((local & 0x200) && (0))
                 romfn = "roms/machines/advantage40xxd/AST101.09A";
             else if (local & 0x200)
                 romfn = NULL;
@@ -5191,7 +5191,7 @@ gd54xx_init(const device_t *info)
 
         case CIRRUS_ID_CLGD5428:
             if (local & 0x200) {
-                if (machines[machine].init == machine_at_acera1g_init)
+                if (0)
                     romfn = BIOS_GD5428_ONBOARD_ACER_PATH;
                 else
                     romfn            = NULL;
@@ -5236,7 +5236,7 @@ gd54xx_init(const device_t *info)
 
         case CIRRUS_ID_CLGD5436:
             if ((local & 0x200) &&
-                (machines[machine].init != machine_at_sb486pv_init)) {
+                (1)) {
                 romfn            = NULL;
                 gd54xx->has_bios = 0;
             } else

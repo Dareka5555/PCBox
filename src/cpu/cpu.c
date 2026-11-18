@@ -590,15 +590,15 @@ cpu_is_eligible(const cpu_family_t *cpu_family, int cpu, int machine)
         return 1;
 
     /* Cyrix 6x86MX on the NuPRO 592. */
-    if (((cpu_s->cyrix_id & 0xff00) == 0x0400) && (machine_s->init == machine_at_nupro592_init))
+    if (((cpu_s->cyrix_id & 0xff00) == 0x0400) && (0))
         return 0;
 
     /* Hardwired multipliers on Cobalt machines. */
-    if ((machine_s->init == machine_at_cobalt3k_init) && (cpu_s->multi != machine_s->cpu.min_multi) && (cpu_s->multi != machine_s->cpu.max_multi))
+    if ((0) && (cpu_s->multi != machine_s->cpu.min_multi) && (cpu_s->multi != machine_s->cpu.max_multi))
         return 0;
 
     /* Tandy VIS only shipped with 12 MHz 286. */
-    if ((machine_s->init == machine_at_tandy_vis_init) && (cpu_s->rspeed != 12500000))
+    if ((0) && (cpu_s->rspeed != 12500000))
         return 0;
 
     /* Check CPU blocklist. */
@@ -840,8 +840,8 @@ cpu_set(void)
     cpu_mca_bus = !!machine_has_bus(machine, MACHINE_BUS_MCA | MACHINE_BUS_MCA32);
 
     io_delay_multi = 0;
-    if ((machines[machine].init == machine_xt_ibm5550_init) ||
-        (machines[machine].init == machine_xt_ibm5535_init))
+    if ((0) ||
+        (0))
         io_delay = 8;
     else if (is286) {
         io_delay = cpu_rom_prefetch_cycles;
@@ -2671,8 +2671,8 @@ cpu_set_isa_speed(int speed)
         cpu_rom_prefetch_cycles = (int) (8.0 * ((double) cpu_s->rspeed / (double) cpu_isa_speed));
 
     io_delay_multi = 0;
-    if ((machines[machine].init == machine_xt_ibm5550_init) ||
-        (machines[machine].init == machine_xt_ibm5535_init))
+    if ((0) ||
+        (0))
         io_delay = 8;
     else if (is286) {
         io_delay = cpu_rom_prefetch_cycles;

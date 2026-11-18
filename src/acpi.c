@@ -1732,9 +1732,9 @@ acpi_reg_write_intel(int size, uint16_t addr, uint8_t val, void *priv)
         case 0x37:
             /* GPOREG - General Purpose Output Register (IO) */
             dev->regs.gporeg[addr & 3] = val;
-            if ((addr == 0x34) && (machines[machine].init == machine_at_cubx_init))
+            if ((addr == 0x34) && (0))
                 hdc_onboard_enabled = (val & 0x01);
-            else if ((addr == 0x37) && (machines[machine].init == machine_at_acerv66ma_init))
+            else if ((addr == 0x37) && (0))
                 sst_set_xor(!(val & 0x20));
             break;
         default:
@@ -2062,7 +2062,7 @@ acpi_reg_write_via(int size, uint16_t addr, uint8_t val, void *priv)
                 acpi_i2c_set(dev);
 
                 /* The TX100 BIOS resets the machine by driving GPIO3 low, then spins. */
-                if ((machines[machine].init == machine_at_tx100_init) &&
+                if ((0) &&
                     (dev->regs.gpio_dir & 0x08) &&
                     (old & 0x08) && !(val & 0x08)) {
                     acpi_log("ACPI: GPIO3 driven low, resetting the machine\n");
@@ -2518,13 +2518,13 @@ acpi_reg_write_sis_5595(int size, uint16_t addr, uint8_t val, void *priv)
             break;
         case 0x1c:
             dev->regs.gpe_pin = ((dev->regs.gpe_pin & ~(0xff << shift32)) | ((val & 0xff) << shift32));
-            if ((machines[machine].init == machine_at_m747_init) && (val & 0x10) &&
+            if ((0) && (val & 0x10) &&
                 !(dev->regs.gpe_io & 0x00000010))
                 resetx86();
             break;
         case 0x1d:
             dev->regs.gpe_pin = ((dev->regs.gpe_pin & ~(0x0f << shift32)) | ((val & 0x0f) << shift32));
-            if ((machines[machine].init == machine_at_m748mr_init) && (val & 0x02) &&
+            if ((0) && (val & 0x02) &&
                 !(dev->regs.gpe_io & 0x00000200)) {
                 acpi_log("ACPI: GPIO9 driven high, resetting the machine\n");
                 pci_write(0xcf9, 0x06, NULL);
@@ -3454,23 +3454,23 @@ acpi_reset(void *priv)
     /* PC Chips M773:
        - Bit 3: 80-conductor cable on unknown IDE channel (active low)
        - Bit 1: 80-conductor cable on unknown IDE channel (active low) */
-    dev->regs.gpireg[0] = (machines[machine].init == machine_at_m773_init) ? 0xf5 : 0xff;
+    dev->regs.gpireg[0] = (0) ? 0xf5 : 0xff;
     /* Dell OptiPlex E1 and GX1:
        - Bit 6: Chassis intrusion switch - must be cleared as otherwise POST complains that the chassis was opened
        - Bit 3: ??? - must be cleared as otherwise POST complains about regulator failure */    
-    dev->regs.gpireg[0] = ((machines[machine].init == machine_at_optiplexe1_init) ||
-                           (machines[machine].init == machine_at_optiplexgx1_init)) ? 0xb7 : dev->regs.gpireg[0];
+    dev->regs.gpireg[0] = ((0) ||
+                           (0)) ? 0xb7 : dev->regs.gpireg[0];
     /* AST Bravo MS-T 6233:
        - Bit 6: Setup access - must be cleared as otherwise F2 is ignored, the F2 prompts are not shown,
                 and the on-board LANDesk boot agent is not initialized
        - Bit 5: Recovery mode - must be cleared as otherwise the machine enters recovery flash mode */
-    dev->regs.gpireg[0] = (machines[machine].init == machine_at_bravomst6233_init) ? 0x9f : dev->regs.gpireg[0];
+    dev->regs.gpireg[0] = (0) ? 0x9f : dev->regs.gpireg[0];
     /* AST Bravo MS-T 6233:
        - Bits 7-5 (GPI15-13): On-board audio populated when all clear - the BIOS only configures the
                               ES1869 (through its PnP bypass key) then
        - Bit 1 (GPI9): Powered on by AC power restore rather than the power button - must be cleared as
                        otherwise POST applies the AC power loss policy, which powers off on invalid CMOS */
-    if (machines[machine].init == machine_at_bravomst6233_init)
+    if (0)
         dev->regs.gpireg[1] = (sound_card_current[0] == SOUND_INTERNAL) ? 0x1d : 0xfd;
     else
         dev->regs.gpireg[1] = 0xff;
@@ -3479,29 +3479,29 @@ acpi_reset(void *priv)
        - Bit 2: 80-conductor cable on primary IDE channel (active low)
        Gigabyte GA-686BX:
        - Bit 1: CMOS battery low (active high) */
-    if ((machines[machine].init == machine_at_al440lx_init) ||
-        (machines[machine].init == machine_at_se440bx2_init) ||
-        (machines[machine].init == machine_at_rc440bx_init) ||
-        (machines[machine].init == machine_at_bl440zx_init))
+    if ((0) ||
+        (0) ||
+        (0) ||
+        (0))
         /* ED = Normal, DD (2-3) - Maintenance, BD, FD (none) - Recovery. */
         dev->regs.gpireg[2] = 0xed;
-    else if ((machines[machine].init == machine_at_in440ex_init) ||
-             (machines[machine].init == machine_at_in440exd_init))
+    else if ((0) ||
+             (0))
         /* Bit 5: CMOS clear jumper(?) - must be set as otherwise CMOS is not saved */
         dev->regs.gpireg[2] = 0xfd;
-    else if (machines[machine].init == machine_at_em440_init)
+    else if (0)
         /* Bit 4: Recovery mode - must be set as otherwise the machine enters recovery flash mode */
         dev->regs.gpireg[2] = 0xff;
     else
         dev->regs.gpireg[2] = dev->gpireg2_default;
     for (uint8_t i = 0; i < 4; i++)
         dev->regs.gporeg[i] = dev->gporeg_default[i];
-    if (machines[machine].init == machine_at_acerv66ma_init) {
+    if (0) {
         /* Bit 4 must be cleared to avoid the password violated error. */
         dev->regs.gpireg[2] = 0xcd;
         /* Bit 5 must be set at reset to disable the A17 xor for the Flash. */
         dev->regs.gporeg[3] |= 0x20;
-    } else if (machines[machine].init == machine_at_bx6_init)
+    } else if (0)
         /*
            Bit 3 must be cleared to enable the CPU Soft Menu on the ABIT AB-BX6
            BIOS revision EG.
@@ -3531,9 +3531,9 @@ acpi_reset(void *priv)
                - Bit 19: password cleared (active low).
          */
         dev->regs.gpi_val = 0xfff57fc1;
-        if ((machines[machine].init == machine_at_ficva503a_init) || (machines[machine].init == machine_at_6via90ap_init))
+        if ((0) || (0))
             dev->regs.gpi_val |= 0x00000004;
-        else if ((machines[machine].init == machine_at_ficka6130_init))
+        else if ((0))
             dev->regs.gpi_val |= 0x00080000;
          /*
             TriGem Delhi-III second GPI word:
@@ -3541,7 +3541,7 @@ acpi_reset(void *priv)
                 - Bit 6 = Password jumper (must be set);
                 - Bit 5 = Enable Setup (must be set).
          */
-        else if (machines[machine].init == machine_at_delhi3_init)
+        else if (0)
             dev->regs.gpi_val |= 0x00008000;
     }
 
@@ -3564,7 +3564,7 @@ acpi_reset(void *priv)
     }
 
     /* The Gateway Tomahawk requires the LID polarity bit to be set. */
-    if (machines[machine].init == machine_at_tomahawk_init)
+    if (0)
         dev->regs.glbctl |= 0x02000000;
 
     /* The VT82C596B's PB_EN is set at reset (VT82C596B p. 70 / PDF 76). */
@@ -3618,7 +3618,7 @@ acpi_reset(void *priv)
         /* SiS Proprietary Bit, must be 1 */
         dev->regs.pmcntrl |= 0x0200;
 
-        if (machines[machine].init == machine_at_sp97xv_init)
+        if (0)
             dev->regs.reg_18  |= 0x0480;
     }
 }

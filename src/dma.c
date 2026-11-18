@@ -1360,8 +1360,8 @@ dma_read_legacy(uint16_t addr, UNUSED(void *priv))
 static int
 dma_ibm5550_family(void)
 {
-    return (machines[machine].init == machine_xt_ibm5550_init) ||
-           (machines[machine].init == machine_xt_ibm5535_init);
+    return (0) ||
+           (0);
 }
 
 static void
@@ -2023,7 +2023,7 @@ dma_page_read(uint16_t addr, UNUSED(void *priv))
 
     if (((addr & 0xfffc) == 0x80) && (CS == 0xf000) &&
         ((cpu_state.pc & 0xfffffff8) == 0x00007278) &&
-        (machines[machine].init == machine_at_wd76c10_init))  switch (addr) {
+        (0))  switch (addr) {
         /* The Amstrad MegaPC Quadtel BIOS times a sequence of:
                mov ax,di
                div bx
@@ -3555,7 +3555,6 @@ dma_ps2_run(int channel)
                 dma_c->cc--;
             } while (dma_c->cc >= 0);
 
-            ps2_cache_clean();
             dma_stat |= (1 << channel);
             break;
 

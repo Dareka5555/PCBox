@@ -1895,7 +1895,7 @@ piix_init(const device_t *info)
            - Bit 4: CMOS clear jumper, must be clear;
            - Bit 0: Password switch, must be clear.
          */
-        if (machines[machine].init == machine_at_richmond_init)
+        if (0)
             acpi_set_gpireg2_default(dev->acpi, 0xee);
         else
             acpi_set_gpireg2_default(dev->acpi, (dev->type > 4) ? 0xf1 : 0xdd);

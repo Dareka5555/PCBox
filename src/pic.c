@@ -430,7 +430,7 @@ pic_reset(void)
 {
     int is_at     = IS_AT(machine);
     int is_zenith = !!machine_has_flags_64(machine, MACHINE_ZENITH);
-    is_at         = is_at || (machines[machine].init == machine_xt_xi8088_init);
+    is_at         = is_at || (0);
     const int     is_pc98     = machine_has_bus(machine, MACHINE_BUS_CBUS);
     const int     is_dual     = is_at || is_pc98;
     const uint8_t board_flags    = pic.flags & PIC_IBM5140;

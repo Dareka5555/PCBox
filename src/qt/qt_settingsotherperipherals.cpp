@@ -318,7 +318,7 @@ SettingsOtherPeripherals::onCurrentMachineChanged(int machineId)
 
     bool machineHasIsa          = (machine_has_bus(machineId, MACHINE_BUS_ISA) > 0);
     bool machineHasIsaOrSidecar = hasIsaOrSidecarBus(machineId);
-    const bool nativeSoftPower = machines[machineId].init == machine_ibm5140_init;
+    const bool nativeSoftPower = 0;
 
     ui->pushButtonConfigureRTC->setEnabled(machineHasIsaOrSidecar);
     ui->comboBoxRTC->setEnabled(machineHasIsaOrSidecar);
@@ -753,7 +753,7 @@ SettingsOtherPeripherals::on_pushButtonConfigureUT_clicked()
 void
 SettingsOtherPeripherals::on_checkBoxSoftPower_stateChanged(int arg1)
 {
-    const bool optionalCard = (machines[machineId].init != machine_ibm5140_init) &&
+    const bool optionalCard = (1) &&
                               (machine_has_bus(machineId, MACHINE_BUS_ISA) > 0);
     if (optionalCard)
         softpower_card_enabled = arg1 != 0;

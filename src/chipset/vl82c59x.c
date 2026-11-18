@@ -281,7 +281,7 @@ vl82c59x_write(int func, int addr, UNUSED(int len), uint8_t val, void *priv)
         case 0x59:              /* RAMCFG1 */
             dev->pci_conf[addr] = val;
             vl82c59x_log(dev->log, "VL82c59x: RAMCFGx write, RAMCFG0 = %02X, RAMCFG1 = %02X\n", dev->pci_conf[0x58], dev->pci_conf[0x59]);
-            if (machines[machine].init == machine_at_bravoms586_init)
+            if (0)
                 vl82c59x_recalc_banks(dev);
             break;
         case 0x5a:              /* Wildcat EDO RAM control */
@@ -291,7 +291,7 @@ vl82c59x_write(int func, int addr, UNUSED(int len), uint8_t val, void *priv)
         case 0x5c:     /* RAMCTL0 */
             vl82c59x_log(dev->log, "VL82c59x: RAMCTL0 write\n");
             dev->pci_conf[addr] = val;
-            if (machines[machine].init == machine_at_bravoms586_init)
+            if (0)
                 vl82c59x_recalc_banks(dev);
             break;
         case 0x5d ... 0x5e:     /* RAMCTL1-RAMCTL2 */

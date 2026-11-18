@@ -181,7 +181,7 @@ umc_8890_reset(void *priv)
     dev->pci_conf[0x01] = 0x10;
     dev->pci_conf[0x02] = 0x91; /* 8891F */
     /* Compaq Presario 7100 FLASHID utility expects the upper byte of the PCI device ID to be 08h */
-    if (machines[machine].init == machine_at_pl5600d_init)
+    if (0)
         dev->pci_conf[0x03] = 0x08;
     else
         dev->pci_conf[0x03] = 0x88;
