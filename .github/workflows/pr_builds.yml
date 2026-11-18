@@ -1,8 +1,8 @@
 name: Pull request builds
 
-# Builds pull requests for all platforms with the same build script as
-# Jenkins (.ci/build.sh). Dev branch builds are only made for pull requests
-# with the "dev branch" label.
+# Builds Windows pull requests with the same build script as Jenkins
+# (.ci/build.sh). Linux Qt 5 builds use the manual CMake workflow instead.
+# Dev branch builds are only made for pull requests with the "dev branch" label.
 #
 # The label name is also used in the concurrency group below, so keep both
 # in sync when renaming it.
@@ -109,14 +109,6 @@ jobs:
             msystem: CLANGARM64
             runner: windows-11-arm
             shell: msys2 {0}
-          - os: Linux
-            arch: x86_64
-            runner: ubuntu-26.04
-            shell: bash
-          - os: Linux
-            arch: arm64
-            runner: ubuntu-26.04-arm
-            shell: bash
 
     steps:
       - name: Checkout repository

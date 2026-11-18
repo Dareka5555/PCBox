@@ -82,13 +82,6 @@ jobs:
 #            preset: development
 #            slug: -Dev
         ui:
-          - name: SDL GUI
-            id: sdl
-            qt: off
-            qt6: off
-            sdl_shader: on
-            slug: -SDL
-            static: on
           - name: Qt 5 GUI
             id: qt5
             qt: on
@@ -106,9 +99,6 @@ jobs:
           - arch: x86_64
             slug: "-x86_64"
             runner: ubuntu-22.04
-#          - arch: arm64
-#            slug: -arm64
-#            runner: ubuntu-22.04-arm
 
     steps:
       - name: Install dependencies

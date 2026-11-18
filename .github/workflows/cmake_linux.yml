@@ -1,67 +1,28 @@
 name: CMake (Linux)
 
-# Compile checks for the configurations the pull request builds (made with
-# .ci/build.sh) don't cover. Each build is packaged as an AppImage with
-# linuxdeploy, independently of build.sh, bundling the libraries it links to
-# (and for Qt builds, the Qt plugins). They don't bundle glibc, so they need a
-# host at least as new as the runner's Ubuntu release, and they leave out the
-# extras build.sh adds (librashader, MDSX, Aaru, Ghostscript). The pull request
-# builds remain the more portable Linux builds.
-#
-# The build types marked manual are only built on manual runs with the full
-# matrix option. Among them are the x86_64 SDL and Qt 5 Dev Debug builds, which
-# the CodeQL workflow already makes.
-
-# Linux builds are manual only; automatic validation is Windows x86_64.
+# Manual Linux x86_64 Qt 5 builds, packaged as AppImages.
 on:
   workflow_dispatch:
-    inputs:
-      full_matrix:
-        description: Build every configuration, including the build types marked manual
-        type: boolean
-        default: true
-
-# Cancel superseded runs for the same pull request. Pushes to master share
-# a group too, so that while one is building, only the newest of the pushes
-# after it waits instead of all of them. Other events get a unique group so
-# that they are never cancelled or held back.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || (github.ref == 'refs/heads/pcbox' && github.event_name == 'push' && 'pcbox') || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
 
   linux:
 
-    name: "${{ matrix.ui.name }}, ${{ matrix.build.name }}, ${{ matrix.dynarec.name }}, ${{ matrix.environment.arch }}"
-
-    if: github.event.action != 'closed'
+    name: "Qt 5, ${{ matrix.build.name }}, ${{ matrix.environment.arch }}"
 
     runs-on: ${{ matrix.environment.runner }}
 
     strategy:
       fail-fast: true
       matrix:
-        # Development variants are available through workflow_dispatch with
-        # full_matrix enabled; pushes and pull requests build Regular only.
         build:
-          - name: Regular
+          - name: Release
+            slug: Release
             preset: regular
-          - name: Dev Debug
-            slug: Dev-Debug
-            preset: dev_debug
-            manual: true
-          - name: Dev
-            slug: Dev
-            preset: development
-            manual: true
+          - name: Debug
+            slug: Debug
+            preset: debug
         ui:
-          - name: SDL GUI
-            slug: SDL
-            qt: off
-            qt6: off
-            sdl_shader: on
-            static: on
           - name: Qt 5 GUI
             slug: Qt5
             qt: on
@@ -75,34 +36,10 @@ jobs:
               qttranslations5-l10n
               libevdev-dev
               libxkbcommon-x11-dev
-          - name: Qt 6 GUI
-            slug: Qt6
-            qt: on
-            qt6: on
-            sdl_shader: off
-            qmake: /usr/lib/qt6/bin/qmake
-            packages: >-
-              qt6-base-dev
-              qt6-base-private-dev
-              qt6-tools-dev
-              qt6-tools-dev-tools
-              qt6-l10n-tools
-              qt6-translations-l10n
-              libevdev-dev
-              libxkbcommon-x11-dev
-              libvulkan-dev
         environment:
           - arch: x86_64
             appimage_arch: x86_64
             runner: ubuntu-26.04
-          - arch: arm64
-            appimage_arch: aarch64
-            runner: ubuntu-26.04-arm
-        # A missing manual key matches false, so full matrix runs exclude
-        # 'never', which no entry has, instead
-        exclude:
-          - build:
-              manual: ${{ !inputs.full_matrix || 'never' }}
 
     steps:
       - name: Install dependencies
@@ -153,9 +90,7 @@ jobs:
           curl -fsSLO "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/1-alpha-20250213-1/linuxdeploy-plugin-qt-$ARCH.AppImage"
           sha256sum --check --ignore-missing <<'EOF'
           c20cd71e3a4e3b80c3483cef793cda3f4e990aca14014d23c544ca3ce1270b4d  linuxdeploy-x86_64.AppImage
-          620095110d693282b8ebeb244a95b5e911cf8f65f76c88b4b47d16ae6346fcff  linuxdeploy-aarch64.AppImage
           15106be885c1c48a021198e7e1e9a48ce9d02a86dd0a1848f00bdbf3c1c92724  linuxdeploy-plugin-qt-x86_64.AppImage
-          bf1c24aff6d749b5cf423afad6f15abd4440f81dec1aab95706b25f6667cdcf1  linuxdeploy-plugin-qt-aarch64.AppImage
           EOF
           chmod +x *.AppImage
           echo "$RUNNER_TEMP/linuxdeploy" >> "$GITHUB_PATH"
@@ -169,7 +104,7 @@ jobs:
           APPIMAGE_EXTRACT_AND_RUN: 1
           ARCH: ${{ matrix.environment.appimage_arch }}
           QMAKE: ${{ matrix.ui.qmake }}
-          NO_STRIP: ${{ matrix.build.preset == 'dev_debug' && '1' || '' }}
+          NO_STRIP: ${{ matrix.build.preset == 'debug' && '1' || '' }}
           PACKAGE: PCBox-${{ matrix.ui.slug }}-${{ matrix.build.slug }}-Linux-${{ matrix.environment.arch }}
         run: |
           PACKAGE="$PACKAGE-$(git rev-parse --short HEAD)"
