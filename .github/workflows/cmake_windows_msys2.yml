@@ -126,12 +126,15 @@ jobs:
           - msystem: CLANGARM64
             slug: -arm64
             runner: windows-11-arm
-        # Keep push/PR runs small; workflow_dispatch with full_matrix=true
-        # opts back into every development/UI combination.
+            manual: true
+        # Push/PR builds cover the regular x86_64 configuration. The full
+        # matrix, including arm64 and development/UI variants, is manual.
         exclude:
           - build:
               manual: ${{ !inputs.full_matrix || 'never' }}
           - ui:
+              manual: ${{ !inputs.full_matrix || 'never' }}
+          - environment:
               manual: ${{ !inputs.full_matrix || 'never' }}
 
     steps:

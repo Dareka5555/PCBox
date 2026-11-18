@@ -715,9 +715,10 @@ VMManagerMain::addNewSystem(const QString &name, const QString &dir, const QStri
         QMessageBox::critical(this, tr("Directory in use"), tr("The selected directory is already in use. Please select a different directory."));
         return;
     }
-    // Create the directory
+    // Create the system directory, including any missing parent directories.
     const QDir qmkdir;
-    if (const bool mkdirResult = qmkdir.mkdir(newSystemDirectory.path()); !mkdirResult) {
+    if (!qmkdir.mkpath(newSystemDirectory.path())) {
+        qWarning() << "Unable to create system directory:" << newSystemDirectory.path();
         QMessageBox::critical(this, tr("Create directory failed"), tr("Unable to create the directory for the new system"));
         return;
     }
