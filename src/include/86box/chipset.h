@@ -17,63 +17,17 @@
 
 #include <stdint.h>
 
-/* ACC */
-extern const device_t acc2036_device;
-extern const device_t acc2168_device;
-
-/* ALi */
-extern const device_t ali1217_device;
-extern const device_t ali1429_device;
-extern const device_t ali1429g_device;
-extern const device_t ali1409_device;
-extern const device_t ali1435_device;
-extern const device_t ali1489_device;
-extern const device_t ali1531_device;
-extern const device_t ali1541_device;
-extern const device_t ali1541_rowdecode_device;
-
-#define ALI1543_SIO_370 0x10000ULL
-
-extern const device_t ali1543_device;
-extern const device_t ali1543c_device;
-extern const device_t ali1621_device;
-extern const device_t ali6117d_device;
-
-/* AMD */
-extern const device_t amd640_device;
-extern const device_t amd751_device;
-
-/* ASUS */
-extern const device_t asus48625_device;
-extern const device_t isa486c_device;
-
-/* Compaq */
-extern const device_t compaq_device;
-
-extern const device_t compaq_386_device;
-extern const device_t compaq_genoa_device;
-
-/* Contaq/Cypress */
-extern const device_t contaq_82c596a_device;
-extern const device_t contaq_82c597_device;
-
 /* C&T */
-extern const device_t ct_82c100_device;
 extern const device_t neat_device;
 extern const device_t neat_sx_device;
 extern const device_t scat_device;
 extern const device_t scat_4_device;
 extern const device_t scat_sx_device;
-extern const device_t cs8220_device;
 extern const device_t cs8230_device;
-extern const device_t cs4031_device;
 
 /* G2 */
 extern const device_t gc100_device;
 extern const device_t gc100a_device;
-
-/* GRiDcase */
-extern const device_t grid1520_device;
 
 /* Headland */
 extern const device_t headland_gc10x_device;
@@ -83,9 +37,6 @@ extern const device_t headland_ht18b_device;
 extern const device_t headland_ht18c_device;
 extern const device_t headland_ht21c_d_device;
 extern const device_t headland_ht21e_device;
-
-/* IMS */
-extern const device_t ims8848_device;
 
 /* Intel */
 extern const device_t intel_82335_device;
@@ -303,97 +254,17 @@ extern const device_t intel_ich2_device;
 extern const device_t laserxt_device;
 extern const device_t lxt3_device;
 
-/* Olivetti */
-extern const device_t olivetti_eva_device;
-
 /* OPTi */
-extern const device_t opti283_device;
-extern const device_t opti291_device;
-extern const device_t opti381_device;
-extern const device_t opti391_device;
-extern const device_t opti481_device;
-extern const device_t opti493_device;
-extern const device_t opti495slc_device;
-extern const device_t opti495sx_device;
 extern const device_t opti496_device;
-extern const device_t opti498_device;
-extern const device_t opti499_device;
-extern const device_t opti601_device;
-extern const device_t opti602_device;
-extern const device_t opti802g_device;
-extern const device_t opti802g_pci_device;
-extern const device_t opti822_device;
-extern const device_t opti895_device;
-
-extern const device_t opti5x7_device;
-extern const device_t opti5x7_pci_device;
-extern const device_t opti55x_device;
-extern const device_t opti55x_noide_device;
-
-/* Philips */
-extern const device_t philips_device;
-
-/* Sanyo */
-extern const device_t sanyo_device;
 
 /* SiS */
-extern const device_t rabbit_device;
 extern const device_t sis_85c401_device;
-extern const device_t sis_85c411_device;
-extern void           sis_85c411_set_board_id(const char *mfg, uint16_t product, uint8_t rev);
 extern const device_t sis_85c460_device;
 extern const device_t sis_85c461_device;
 extern const device_t sis_85c471_device;
-extern const device_t sis_85c496_device;
-extern const device_t sis_85c496_ls486e_device;
-extern const device_t sis_85c50x_device;
-extern const device_t sis_550x_85c503_device;
-extern const device_t sis_85c50x_5503_device;
-extern const device_t sis_550x_device;
-extern const device_t sis_5511_device;
 extern const device_t sis_5571_device;
-extern const device_t sis_5581_device;
-extern const device_t sis_5591_1997_device;
-extern const device_t sis_530_device;
-extern const device_t sis_620_1997_device;
-extern const device_t sis_620_device;
-extern const device_t sis_5591_device;
-extern const device_t sis_5600_1997_device;
-extern const device_t sis_5600_device;
-
-/* ST */
-extern const device_t stpc_client_device;
-extern const device_t stpc_consumer2_device;
-extern const device_t stpc_elite_device;
-extern const device_t stpc_atlas_device;
-extern const device_t stpc_serial_device;
-extern const device_t stpc_lpt_device;
-
-/* Symphony */
-extern const device_t sl82c461_device;
-
-/* UMC */
-extern const device_t umc_8886f_device;
-extern const device_t umc_8886af_device;
-extern const device_t umc_8886bf_device;
-extern const device_t umc_8890_device;
-extern const device_t umc_hb4_device;
-
-/* Utron */
-extern const device_t ut85c50x_device;
 
 /* VIA */
-extern const device_t via_vt82c49x_device;
-extern const device_t via_vt82c49x_pci_device;
-extern const device_t via_vt82c49x_pci_ide_device;
-extern const device_t via_vt82c505_device;
-extern const device_t via_vpx_device;
-extern const device_t via_vp3_device;
-extern const device_t via_mvp3_device;
-extern const device_t via_apro_device;
-extern const device_t via_apro133_device;
-extern const device_t via_apro133a_device;
-extern const device_t via_vt8601_device;
 
 #define VIA_PIPC_NO_KBC 0x0000000100000000ULL
 
@@ -406,21 +277,7 @@ extern void           via_pipc_set_ioapic(void *priv, void *ioapic);
 extern const device_t via_vt8231_device;
 
 /* VLSI */
-/* Size of the secondary cache SRAM, for the Direct Access mode of CACHCTL. */
-#define VL82C480_CACHE_128K  0x0400
-#define VL82C480_CACHE_256K  0x0800
-#define VL82C480_CACHE_SHIFT 8
-
-extern const device_t vl82c480_device;
-extern const device_t vl82c486_device;
-extern const device_t vl82c59x_device;
-extern const device_t vl82c59x_compaq_device;
-extern const device_t vl82c59x_wildcat_device;
-extern const device_t vl82c59x_wildcat_compaq_device;
 extern const device_t vlsi_scamp_device;
-
-/* WD */
-extern const device_t wd76c10_device;
 
 /* Miscellaneous Hardware */
 extern const device_t tulip_jumper_device;
