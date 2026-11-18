@@ -1594,18 +1594,3 @@ const device_t dp83815_device = {
     .alias         = "National Semiconductor MacPhyter",
     .config        = dp83815_config
 };
-
-const device_t dp83815_onboard_device = {
-    .name          = "National Semiconductor DP83815/16 (On-Board)",
-    .internal_name = "dp83815_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = 0x8000,
-    .init          = dp83815_init,
-    .close         = dp83815_close,
-    .reset         = dp83815_reset,
-    .available     = NULL,
-    .speed_changed = NULL,
-    .force_redraw  = NULL,
-    .config        = &dp83815_config[1]
-};
-

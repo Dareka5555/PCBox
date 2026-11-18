@@ -1882,20 +1882,6 @@ const device_t cmi8338_device = {
     .config        = cmi8x38_config
 };
 
-const device_t cmi8338_onboard_device = {
-    .name          = "C-Media CMI8338 (On-Board)",
-    .internal_name = "cmi8338_onboard",
-    .flags         = DEVICE_PCI | DEVICE_AUDIO_IN, /* audio input */
-    .local         = CMEDIA_CMI8338 | (1 << 13),
-    .init          = cmi8x38_init,
-    .close         = cmi8x38_close,
-    .reset         = cmi8x38_reset,
-    .available     = NULL,
-    .speed_changed = cmi8x38_speed_changed,
-    .force_redraw  = NULL,
-    .config        = cmi8x38_config
-};
-
 const device_t cmi8738_device = {
     .name          = "C-Media CMI8738",
     .internal_name = "cmi8738",
@@ -1908,32 +1894,4 @@ const device_t cmi8738_device = {
     .speed_changed = cmi8x38_speed_changed,
     .force_redraw  = NULL,
     .config        = cmi8738_config
-};
-
-const device_t cmi8738_onboard_device = {
-    .name          = "C-Media CMI8738 (On-Board)",
-    .internal_name = "cmi8738_onboard",
-    .flags         = DEVICE_PCI | DEVICE_AUDIO_IN, /* audio input */
-    .local         = CMEDIA_CMI8738_4CH | (1 << 13),
-    .init          = cmi8x38_init,
-    .close         = cmi8x38_close,
-    .reset         = cmi8x38_reset,
-    .available     = NULL,
-    .speed_changed = cmi8x38_speed_changed,
-    .force_redraw  = NULL,
-    .config        = cmi8x38_config
-};
-
-const device_t cmi8738_6ch_onboard_device = {
-    .name          = "C-Media CMI8738-6CH (On-Board)",
-    .internal_name = "cmi8738_6ch_onboard",
-    .flags         = DEVICE_PCI | DEVICE_AUDIO_IN, /* audio input */
-    .local         = CMEDIA_CMI8738_6CH | (1 << 13),
-    .init          = cmi8x38_init,
-    .close         = cmi8x38_close,
-    .reset         = cmi8x38_reset,
-    .available     = NULL,
-    .speed_changed = cmi8x38_speed_changed,
-    .force_redraw  = NULL,
-    .config        = cmi8x38_config
 };

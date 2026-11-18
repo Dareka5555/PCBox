@@ -4334,35 +4334,6 @@ mach64gtb_init(const device_t *info)
     return mach64;
 }
 
-static void *
-mach64vt3_onboard_init(const device_t *info)
-{
-    mach64_t *mach64 = mach64_common_init(info);
-    svga_t   *svga   = &mach64->svga;
-
-    svga->dac_hwcursor_draw = NULL;
-
-    svga->hwcursor.cur_ysize = 64;
-    svga->hwcursor.cur_xsize = 64;
-
-    video_inform(VIDEO_FLAG_TYPE_SPECIAL, &timing_mach64_pci);
-
-    mach64->pci                  = 1;
-    mach64->vlb                  = 0;
-    mach64->pci_id               = 0x5655;
-    mach64->config_chip_id       = 0x9A005655;
-    mach64->dac_cntl             = 1 << 16; /*Internal 24-bit DAC*/
-    mach64->config_stat0         = 4 | (1 << 4); /* CFG_MEM_TYPE, and the CFG_VGA_EN strap: VGA on (VT/RAGE RRG 4-18) */
-    mach64->use_block_decoded_io = 4;
-
-    mem_mapping_disable(&mach64->bios_rom.mapping);
-
-    svga->vblank_start = mach64_vblank_start;
-    svga->adv_flags   |= FLAG_PANNING_ATI;
-
-    *reset_state[monitor_index_global] = *mach64;
-    return mach64;
-}
 
 int
 mach64gx_available(void)
@@ -5332,54 +5303,6 @@ static const device_config_t mach64ragelt_config[] = {
 
 /* The on-board 3D Rage Pro Turbo of the Intel BL440ZX, 8 MB of
    SDRAM (TPS 1.7); its BIOS is in the system BIOS. */
-static const device_config_t mach64ragepro_onboard_config[] = {
-    {
-        .name           = "memory",
-        .description    = "Memory size",
-        .type           = CONFIG_SELECTION,
-        .default_string = NULL,
-        .default_int    = 8,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = {
-            { .description = "8 MB", .value = 8 },
-            { .description = ""                 }
-        },
-        .bios           = { { 0 } }
-    },
-    {
-        .name           = "render_threads",
-        .description    = "Render threads",
-        .type           = CONFIG_SELECTION,
-        .default_string = NULL,
-        .default_int    = 2,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = {
-            { .description = "1", .value = 1 },
-            { .description = "2", .value = 2 },
-            { .description = "4", .value = 4 },
-            { .description = ""              }
-        },
-        .bios           = { { 0 } }
-    },
-    {
-        .name           = "fixed_io",
-        .description    = "I/O base",
-        .type           = CONFIG_HEX16,
-        .default_string = NULL,
-        .default_int    = 0,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = {
-            { .description = "Assigned by the BIOS",          .value = 0x0000 },
-            { .description = "D800h (Midway TouchMaster II)", .value = 0xd800 },
-            { .description = ""                                               }
-        },
-        .bios           = { { 0 } }
-    },
-    { .name = "", .description = "", .type = CONFIG_END }
-};
 
 static const device_config_t mach64gtb_onboard_config[] = {
     {
@@ -5448,21 +5371,6 @@ const device_t mach64gx_vlb_device = {
     .debug_dump    = mach64_debug_dump
 };
 
-const device_t mach64gx_vlb_onboard_device = {
-    .name          = "ATI Mach64GX (On-Board) VLB",
-    .internal_name = "mach64gx_vlb_onboard",
-    .flags         = DEVICE_VLB,
-    .local         = MACH64_GX | MACH64_FLAG_ONBOARD,
-    .init          = mach64gx_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .available     = NULL,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = mach64gx_vram_config,
-    .debug_dump    = mach64_debug_dump
-};
-
 const device_t mach64gx_xpression_vlb_device = {
     .name          = "ATI Mach64GX (Graphics Xpression) VLB",
     .internal_name = "mach64gx_xpression_vlb",
@@ -5494,21 +5402,6 @@ const device_t mach64gx_pci_device = {
     .debug_dump    = mach64_debug_dump
 };
 
-const device_t mach64gx_pci_onboard_device = {
-    .name          = "ATI Mach64GX (On-Board) PCI",
-    .internal_name = "mach64gx_pci_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = MACH64_GX | MACH64_FLAG_DRAM | MACH64_FLAG_ONBOARD,
-    .init          = mach64gx_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .available     = NULL,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = mach64gx_config,
-    .debug_dump    = mach64_debug_dump
-};
-
 const device_t mach64ct_device = {
     .name          = "ATI Mach64CT",
     .internal_name = "mach64ct",
@@ -5518,21 +5411,6 @@ const device_t mach64ct_device = {
     .close         = mach64_close,
     .reset         = mach64_reset,
     .available     = mach64ct_available,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = NULL,
-    .debug_dump    = mach64_debug_dump
-};
-
-const device_t mach64ct_onboard_device = {
-    .name          = "ATI Mach64CT (On-Board)",
-    .internal_name = "mach64ct_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = MACH64_CT | MACH64_FLAG_ONBOARD,
-    .init          = mach64ct_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .available     = NULL,
     .speed_changed = mach64_speed_changed,
     .force_redraw  = mach64_force_redraw,
     .config        = NULL,
@@ -5583,19 +5461,6 @@ const device_t mach64gt_device = {
     .config        = mach64gtb_onboard_config
 };
 
-const device_t mach64gt_onboard_device = {
-    .name          = "ATI 3D Rage (On-Board)",
-    .internal_name = "mach64_rage_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = MACH64_GT | MACH64_FLAG_ONBOARD,
-    .init          = mach64gtb_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = mach64gtb_onboard_config
-};
-
 const device_t mach64rage2_device = {
     .name          = "ATI 3D Rage II",
     .internal_name = "mach64_rage2",
@@ -5608,19 +5473,6 @@ const device_t mach64rage2_device = {
     .speed_changed = mach64_speed_changed,
     .force_redraw  = mach64_force_redraw,
     .config        = mach64gtb_config
-};
-
-const device_t mach64rage2_onboard_device = {
-    .name          = "ATI 3D Rage II (On-Board)",
-    .internal_name = "mach64_rage2_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = MACH64_GTB | MACH64_FLAG_RAGE2 | MACH64_FLAG_ONBOARD,
-    .init          = mach64gtb_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = mach64gtb_onboard_config
 };
 
 const device_t mach64gtb_device = {
@@ -5730,63 +5582,6 @@ const device_t mach64ragelt_agp_device = {
     .config        = mach64ragelt_config
 };
 
-const device_t mach64ragepro_onboard_device = {
-    .name          = "ATI Rage Pro Turbo AGP (On-Board)",
-    .internal_name = "mach64_ragepro_onboard",
-    .flags         = DEVICE_AGP,
-    .local         = MACH64_GTB | MACH64_FLAG_RAGEPRO | MACH64_FLAG_ONBOARD,
-    .init          = mach64gtb_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .available     = NULL,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = mach64ragepro_onboard_config
-};
-
 /* The 3D Rage Pro (AGP 1x, on-board): the GD part (4744h), the OEM
    boards' BGA chip with the 1x-only AGP (Controller Specifications
    2.3.1, table 2-1), on a motherboard. */
-const device_t mach64ragepro_gd_onboard_device = {
-    .name          = "ATI 3D Rage Pro AGP 1x (On-Board)",
-    .internal_name = "mach64_ragepro_gd_onboard",
-    .flags         = DEVICE_AGP,
-    .local         = MACH64_GTB | MACH64_FLAG_RAGEPRO | MACH64_FLAG_GD | MACH64_FLAG_ONBOARD,
-    .init          = mach64gtb_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .available     = NULL,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = mach64ragepro_onboard_config
-};
-
-const device_t mach64gtb_onboard_device = {
-    .name          = "ATI 3D Rage II+ DVD (On-Board)",
-    .internal_name = "mach64_rage2p_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = MACH64_GTB | MACH64_FLAG_ONBOARD,
-    .init          = mach64gtb_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .available     = NULL,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = mach64gtb_onboard_config,
-    .debug_dump    = mach64_debug_dump
-};
-
-const device_t mach64vt3_onboard_device = {
-    .name          = "ATI Mach64VT3 (On-Board)",
-    .internal_name = "mach64vt3_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = MACH64_VT3 | MACH64_FLAG_ONBOARD,
-    .init          = mach64vt3_onboard_init,
-    .close         = mach64_close,
-    .reset         = mach64_reset,
-    .available     = NULL,
-    .speed_changed = mach64_speed_changed,
-    .force_redraw  = mach64_force_redraw,
-    .config        = NULL,
-    .debug_dump    = mach64_debug_dump
-};

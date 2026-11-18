@@ -1682,17 +1682,3 @@ const device_t ess_solo1_device = {
     .config        = NULL,
     .alias         = "ESS ES1938S"
 };
-
-const device_t ess_solo1_onboard_device = {
-    .name          = "ESS Solo-1 ES1938S (On-Board)",
-    .internal_name = "ess_solo1_onboard",
-    .flags         = DEVICE_PCI | DEVICE_AUDIO_IN, /* records */
-    .local         = 1,
-    .init          = solo1_init,
-    .close         = solo1_close,
-    .reset         = solo1_reset,
-    .available     = NULL,
-    .speed_changed = NULL,
-    .force_redraw  = NULL,
-    .config        = NULL
-};

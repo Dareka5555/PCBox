@@ -3294,20 +3294,6 @@ const device_t et4000w32_vlb_device = {
     .config        = et4000w32_config
 };
 
-const device_t et4000w32_onboard_device = {
-    .name          = "Tseng Labs ET4000/w32 ISA (On-Board)",
-    .internal_name = "et4000w32_onboard",
-    .flags         = DEVICE_ISA16,
-    .local         = MACHSPEED_VGA_GUI_2400S | 0x100,
-    .init          = et4000w32p_init,
-    .close         = et4000w32p_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = et4000w32p_speed_changed,
-    .force_redraw  = et4000w32p_force_redraw,
-    .config        = et4000w32_config
-};
-
 const device_t et4000w32i_isa_device = {
     .name          = "Tseng Labs ET4000/w32i ISA",
     .internal_name = "et4000w32i",

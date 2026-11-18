@@ -242,10 +242,7 @@ extern const device_t azt2320_device;
 
 /* C-Media CMI8x38 */
 extern const device_t cmi8338_device;
-extern const device_t cmi8338_onboard_device;
 extern const device_t cmi8738_device;
-extern const device_t cmi8738_onboard_device;
-extern const device_t cmi8738_6ch_onboard_device;
 
 /* Covox ISA */
 extern const device_t voicemasterkey_device;
@@ -267,13 +264,9 @@ extern const device_t sb_pro_v2_device;
 extern const device_t sb_pro_mcv_device;
 extern const device_t sb_pro_compat_device;
 extern const device_t sb_16_device;
-extern const device_t sb_vibra16c_onboard_device;
 extern const device_t sb_vibra16c_device;
-extern const device_t sb_vibra16cl_onboard_device;
 extern const device_t sb_vibra16cl_device;
-extern const device_t sb_vibra16s_onboard_device;
 extern const device_t sb_vibra16s_device;
-extern const device_t sb_vibra16xv_onboard_device;
 extern const device_t sb_vibra16xv_device;
 extern const device_t sb_16_pnp_device;
 extern const device_t sb_16_pnp_ide_device;
@@ -292,12 +285,8 @@ extern const device_t sb_awe64_gold_device;
 
 /* Crystal CS423x */
 extern const device_t cs4232_device;
-extern const device_t cs4232_onboard_device;
 extern const device_t cs4235_device;
-extern const device_t cs4235_onboard_device;
-extern const device_t cs4236_onboard_device;
 extern const device_t cs4236b_device;
-extern const device_t cs4236b_onboard_device;
 extern const device_t cs4237b_device;
 extern const device_t cs4238b_device;
 
@@ -320,18 +309,13 @@ extern const device_t ess_1888_compaq_device;
 extern const device_t ess_1887_device;
 extern const device_t ess_1868_device;
 extern const device_t ess_1869_device;
-extern const device_t ess_1869_onboard_device;
 extern const device_t ess_solo1_device;
-extern const device_t ess_solo1_onboard_device;
 
 /* Ensoniq AudioPCI */
 extern const device_t es1370_device;
 extern const device_t es1371_device;
-extern const device_t es1371_onboard_device;
 extern const device_t es1373_device;
-extern const device_t es1373_onboard_device;
 extern const device_t ct5880_device;
-extern const device_t ct5880_onboard_device;
 
 /* Gravis UltraSound family */
 extern const device_t gus_device;
@@ -350,8 +334,6 @@ extern const device_t gus_pnp_compaq_device;
 extern const device_t imfc_device;
 
 /* IBM PS/1 Audio Card */
-extern const device_t ps1snd_device;
-extern const device_t ps1midi_device;
 
 /* Innovation SSI-2001 */
 extern const device_t ssi2001_device;
@@ -407,7 +389,6 @@ extern const device_t ncr_business_audio_device;
 
 /* Yamaha YMF-7xx */
 extern const device_t ymf701_device;
-extern const device_t ymf715_onboard_device;
 extern const device_t ymf718_device;
 extern const device_t ymf719_device;
 

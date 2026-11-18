@@ -3061,21 +3061,6 @@ static const device_config_t ct5880_config[] = {
     // clang-format on
 };
 
-static const device_config_t es1371_onboard_config[] = {
-    // clang-format off
-    {
-        .name           = "receive_input",
-        .description    = "Receive MIDI input",
-        .type           = CONFIG_BINARY,
-        .default_string = NULL,
-        .default_int    = 1,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = { { 0 } }
-    },
-    { .name = "", .description = "", .type = CONFIG_END }
-    // clang-format on
-};
 
 const device_t es1370_device = {
     .name          = "Ensoniq AudioPCI (ES1370)",
@@ -3106,20 +3091,6 @@ const device_t es1371_device = {
     .config        = es1371_config
 };
 
-const device_t es1371_onboard_device = {
-    .name          = "Ensoniq AudioPCI (ES1371) (On-Board)",
-    .internal_name = "es1371_onboard",
-    .flags         = DEVICE_PCI | DEVICE_AUDIO_IN,
-    .local         = AUDIOPCI_ES1371 | 1,
-    .init          = es1371_init,
-    .close         = es137x_close,
-    .reset         = es137x_reset,
-    .available     = NULL,
-    .speed_changed = es137x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = es1371_onboard_config
-};
-
 const device_t es1373_device = {
     .name          = "Sound Blaster PCI 128 (ES1373)",
     .internal_name = "es1373",
@@ -3135,20 +3106,6 @@ const device_t es1373_device = {
     .alias         = "Ensoniq AudioPCI (ES1373)"
 };
 
-const device_t es1373_onboard_device = {
-    .name          = "Sound Blaster PCI 128 (ES1373) (On-Board)",
-    .internal_name = "es1373_onboard",
-    .flags         = DEVICE_PCI | DEVICE_AUDIO_IN,
-    .local         = AUDIOPCI_ES1373 | 1,
-    .init          = es1371_init,
-    .close         = es137x_close,
-    .reset         = es137x_reset,
-    .available     = NULL,
-    .speed_changed = es137x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = es1371_onboard_config
-};
-
 const device_t ct5880_device = {
     .name          = "Sound Blaster PCI 4.1 (CT5880)",
     .internal_name = "ct5880",
@@ -3162,18 +3119,4 @@ const device_t ct5880_device = {
     .force_redraw  = NULL,
     .config        = ct5880_config,
     .alias         = "Creative CT2518"
-};
-
-const device_t ct5880_onboard_device = {
-    .name          = "Sound Blaster PCI 4.1 (CT5880) (On-Board)",
-    .internal_name = "ct5880_onboard",
-    .flags         = DEVICE_PCI | DEVICE_AUDIO_IN,
-    .local         = AUDIOPCI_CT5880 | 1,
-    .init          = es1371_init,
-    .close         = es137x_close,
-    .reset         = es137x_reset,
-    .available     = NULL,
-    .speed_changed = es137x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = es1371_onboard_config
 };

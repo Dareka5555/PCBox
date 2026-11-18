@@ -3620,11 +3620,6 @@ v3_2000_agp_init(const device_t *info)
     return banshee_init_common(info, ROM_VOODOO3_2000, 0, TYPE_V3_2000, VOODOO_3, 1, 0);
 }
 
-static void *
-v3_2000_agp_onboard_init(const device_t *info)
-{
-    return banshee_init_common(info, NULL, 1, TYPE_V3_2000, VOODOO_3, 1, 0);
-}
 
 static void *
 v3_3000_init(const device_t *info)
@@ -4401,20 +4396,6 @@ const device_t voodoo_3_2000_agp_device = {
     .speed_changed = banshee_speed_changed,
     .force_redraw  = banshee_force_redraw,
     .config        = voodoo_nomem_config
-};
-
-const device_t voodoo_3_2000_agp_onboard_8m_device = {
-    .name          = "3dfx Voodoo3 2000 (On-Board)",
-    .internal_name = "voodoo3_2k_agp_onboard_8m",
-    .flags         = DEVICE_AGP,
-    .local         = 8,
-    .init          = v3_2000_agp_onboard_init,
-    .close         = banshee_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = banshee_speed_changed,
-    .force_redraw  = banshee_force_redraw,
-    .config        = voodoo_sgram_config
 };
 
 const device_t voodoo_3_3000_device = {

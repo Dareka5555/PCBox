@@ -1361,23 +1361,7 @@ paradise_wd90c33_init(const device_t *info)
 
 /* The video BIOS is the first 32 KB of the machine's BIOS image. The chipset
    decodes C0000h-C7FFFh to the bus, so it is mapped like a card's ROM. */
-static void *
-paradise_wd90c33_onboard_init(const device_t *info)
-{
-    paradise_t *paradise = paradise_init_ex(info, device_get_config_int("memory"), 0, 1);
 
-    rom_init(&paradise->bios_rom, TG486G_ROM, 0xc0000, 0x8000, 0x7fff, 0, MEM_MAPPING_EXTERNAL);
-    return paradise;
-}
-
-static void *
-paradise_wd90c31_onboard_init(const device_t *info)
-{
-    uint32_t    memory    = device_get_config_int("memory");
-    paradise_t *paradise  = paradise_init(info, memory);
-
-    return paradise;
-}
 
 void
 paradise_close(void *priv)
@@ -1612,26 +1596,6 @@ static const device_config_t paradise_wd90c31_config[] = {
   // clang-format on
 };
 
-static const device_config_t paradise_wd90c31_onboard_config[] = {
-  // clang-format off
-    {
-        .name           = "memory",
-        .description    = "Memory size",
-        .type           = CONFIG_SELECTION,
-        .default_string = NULL,
-        .default_int    = 512,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = {
-            { .description = "512 KB", .value =  512 },
-            { .description = "1 MB",   .value = 1024 },
-            { .description = ""                      }
-        },
-        .bios           = { { 0 } }
-    },
-    { .name = "", .description = "", .type = CONFIG_END }
-  // clang-format on
-};
 
 const device_t paradise_wd90c30_device = {
     .name          = "Paradise WD90C30-LR",
@@ -1659,20 +1623,6 @@ const device_t paradise_wd90c31_device = {
     .speed_changed = paradise_speed_changed,
     .force_redraw  = paradise_force_redraw,
     .config        = paradise_wd90c31_config
-};
-
-const device_t paradise_wd90c31_onboard_device = {
-    .name          = "Paradise WD90C31A-LR On-Board",
-    .internal_name = "wd90c31_onboard",
-    .flags         = DEVICE_ISA16,
-    .local         = WD90C31,
-    .init          = paradise_wd90c31_onboard_init,
-    .close         = paradise_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = paradise_speed_changed,
-    .force_redraw  = paradise_force_redraw,
-    .config        = paradise_wd90c31_onboard_config
 };
 
 static const device_config_t paradise_wd90c33_config[] = {
@@ -1729,27 +1679,6 @@ static const device_config_t paradise_wd90c33_config[] = {
   // clang-format on
 };
 
-static const device_config_t paradise_wd90c33_onboard_config[] = {
-  // clang-format off
-    {
-        .name           = "memory",
-        .description    = "Memory size",
-        .type           = CONFIG_SELECTION,
-        .default_string = NULL,
-        .default_int    = 1024,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = {
-            { .description = "512 KB", .value =  512 },
-            { .description = "1 MB",   .value = 1024 },
-            { .description = "2 MB",   .value = 2048 },
-            { .description = ""                      }
-        },
-        .bios           = { { 0 } }
-    },
-    { .name = "", .description = "", .type = CONFIG_END }
-  // clang-format on
-};
 
 const device_t paradise_wd90c33_device = {
     .name          = "Paradise WD90C33",
@@ -1777,19 +1706,4 @@ const device_t paradise_wd90c33_vlb_device = {
     .speed_changed = paradise_speed_changed,
     .force_redraw  = paradise_force_redraw,
     .config        = paradise_wd90c33_config
-};
-
-const device_t paradise_wd90c33_onboard_device = {
-    .name          = "Paradise WD90C33 On-Board (TriGem 486G)",
-    .internal_name = "wd90c33_onboard",
-    .flags         = DEVICE_VLB,
-    .local         = WD90C33,
-    .init          = paradise_wd90c33_onboard_init,
-    .close         = paradise_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = paradise_speed_changed,
-    .force_redraw  = paradise_force_redraw,
-    .machine       = "TriGem 486G",
-    .config        = paradise_wd90c33_onboard_config
 };

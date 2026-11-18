@@ -2519,67 +2519,11 @@ static const device_config_t i8255x_onboard_config[] = {
     { .name = "", .description = "", .type = CONFIG_END }
 };
 
-const device_t i82557b_onboard_device = {
-    .name          = "Intel SB82557B (On-Board)",
-    .internal_name = "i82557b_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = 0x0000 | 0x0100,
-    .init          = nic_init,
-    .close         = nic_close,
-    .reset         = eepro100_reset,
-    .available     = NULL,
-    .speed_changed = NULL,
-    .force_redraw  = NULL,
-    .config        = i8255x_onboard_config
-};
-
-const device_t i82558b_onboard_device = {
-    .name          = "Intel SB82558B (On-Board)",
-    .internal_name = "i82558b_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = 0x0007 | 0x0100,
-    .init          = nic_init,
-    .close         = nic_close,
-    .reset         = eepro100_reset,
-    .available     = NULL,
-    .speed_changed = NULL,
-    .force_redraw  = NULL,
-    .config        = i8255x_onboard_config
-};
-
 const device_t nec_pk_ug_x006_device = {
     .name          = "NEC PK-UG-X006",
     .internal_name = "nec_pk_ug_x006",
     .flags         = DEVICE_PCI,
     .local         = 0x0002,
-    .init          = nic_init,
-    .close         = nic_close,
-    .reset         = eepro100_reset,
-    .available     = NULL,
-    .speed_changed = NULL,
-    .force_redraw  = NULL,
-    .config        = i8255x_onboard_config
-};
-
-const device_t i82559c_onboard_device = {
-    .name          = "Intel GD82559C (On-Board)",
-    .internal_name = "i82559c_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = 0x0005 | 0x0100,
-    .init          = nic_init,
-    .close         = nic_close,
-    .reset         = eepro100_reset,
-    .available     = NULL,
-    .speed_changed = NULL,
-    .force_redraw  = NULL,
-    .config        = i8255x_onboard_config
-};
-
-const device_t i82559er_onboard_device = {
-    .name          = "Intel GD82559ER (On-Board)",
-    .internal_name = "i82559er_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = 0x0006 | 0x0100,
     .init          = nic_init,
     .close         = nic_close,
     .reset         = eepro100_reset,

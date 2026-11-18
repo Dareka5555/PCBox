@@ -3459,17 +3459,3 @@ const device_t rtl8139c_plus_device = {
     .force_redraw  = NULL,
     .config        = rtl8139c_config
 };
-
-const device_t rtl8139c_plus_onboard_device = {
-    .name          = "Realtek RTL8139C+ (On-Board)",
-    .internal_name = "rtl8139c+_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = 1,
-    .init          = nic_init,
-    .close         = nic_close,
-    .reset         = rtl8139_pci_reset,
-    .available     = NULL,
-    .speed_changed = rtl8139_speed_changed,
-    .force_redraw  = NULL,
-    .config        = rtl8139c_config
-};

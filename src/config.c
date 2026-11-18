@@ -1058,6 +1058,13 @@ load_sound(void)
     else
         sound_card_current[0] = 0;
 
+    /* Keep old configurations from silently selecting a nonexistent onboard
+       sound device. The unsupported-hardware prompt permits cancellation. */
+    if ((sound_card_current[0] == SOUND_INTERNAL) && !machine_has_flags(machine, MACHINE_SOUND)) {
+        config_unsupported(STRING_UNSUPPORTED_SOUND, "internal");
+        sound_card_current[0] = 0;
+    }
+
     p = ini_section_get_string(cat, "sndcard2", NULL);
     if (p != NULL)
         sound_card_current[1] = config_known(sound_card_get_from_internal_name(p), STRING_UNSUPPORTED_SOUND, p);

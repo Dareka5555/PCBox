@@ -638,20 +638,6 @@ const device_t tvga8900_device = {
     .config        = tvga8900_config
 };
 
-const device_t tvga8900d_onboard_device = {
-    .name          = "Trident TVGA 8900D (On-Board)",
-    .internal_name = "tvga8900d_onboard",
-    .flags         = DEVICE_ISA | DEVICE_BIOS_ALIAS,
-    .local         = TVGA8900CLD_ID | 0x0200,
-    .init          = tvga_init,
-    .close         = tvga_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = tvga_speed_changed,
-    .force_redraw  = tvga_force_redraw,
-    .config        = tvga_config
-};
-
 const device_t tvga9000b_device = {
     .name          = "Trident TVGA 9000B",
     /*

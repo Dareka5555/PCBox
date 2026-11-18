@@ -62,25 +62,18 @@ add_library(vid OBJECT
     vid_cga.c
     vid_cga_comp.c
     vid_cga_compaq.c 
-    vid_cga_compaq_plasma.c
     vid_cga_colorplus.c
     vid_cga_ncr.c
     vid_cga_olivetti.c
     vid_cga_quadcolor.c
     vid_cga_toshiba_t1000.c
-    vid_cga_toshiba_t3100e.c
     vid_cga_v6355.c
 
     # IBM PC Convertible LCD display
-    vid_ibm5140.c
 
     # PCjr/PC JX/Tandy
     vid_pcjr.c
     vid_pcjr_comp.c
-    vid_pcjx.c
-    vid_tandy1k.c
-    vid_tandy2k.c
-    vid_tandy_vis.c
 
     # Hercules
     vid_mda.c
@@ -113,7 +106,6 @@ add_library(vid OBJECT
     vid_svga_render.c
 
     # IBM PS/2 plasma display
-    vid_ibm_plasma.c
 
     # 8514/A, XGA and derivatives
     vid_8514a.c
@@ -184,7 +176,6 @@ add_library(vid OBJECT
     vid_p9100.c
 
     # SiS
-    vid_sis6306.c
 
     # Matrox
     vid_mga.c

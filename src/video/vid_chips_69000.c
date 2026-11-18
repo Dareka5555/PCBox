@@ -3319,17 +3319,3 @@ const device_t chips_69000_device = {
     .force_redraw  = chips_69000_force_redraw,
     .config        = NULL
 };
-
-const device_t chips_69000_onboard_device = {
-    .name          = "Chips & Technologies B69000 On-Board",
-    .internal_name = "chips_69000_onboard",
-    .flags         = DEVICE_PCI,
-    .local         = 1,
-    .init          = chips_69000_init,
-    .close         = chips_69000_close,
-    .reset         = chips_69000_reset,
-    .available     = chips_69000_available,
-    .speed_changed = chips_69000_speed_changed,
-    .force_redraw  = chips_69000_force_redraw,
-    .config        = NULL
-};

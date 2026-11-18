@@ -6683,43 +6683,6 @@ static const device_config_t s3_virge_pci_config[] = {
     // clang-format on
 };
 
-static const device_config_t s3_virge_onboard_config[] = {
-    // clang-format off
-    {
-        .name           = "bilinear",
-        .description    = "Bilinear filtering",
-        .type           = CONFIG_BINARY,
-        .default_int    = 1,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = { { 0 } },
-        .bios           = { { 0 } }
-    },
-    {
-        .name           = "colorkey",
-        .description    = "Video chroma-keying",
-        .type           = CONFIG_BINARY,
-        .default_string = NULL,
-        .default_int    = 1,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = { { 0 } },
-        .bios           = { { 0 } }
-    },
-    {
-        .name           = "dithering",
-        .description    = "Dithering",
-        .type           = CONFIG_BINARY,
-        .default_int    = 1,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = { { 0 } },
-        .bios           = { { 0 } }
-    },
-    S3_VIRGE_RENDER_THREADS_CONFIG,
-    { .name = "", .description = "", .type = CONFIG_END }
-    // clang-format on
-};
 
 static const device_config_t s3_virge_vx_pci_config[] = {
     // clang-format off
@@ -7097,20 +7060,6 @@ const device_t s3_virge_pci_device = {
     .config        = s3_virge_pci_config
 };
 
-const device_t s3_virge_325_onboard_pci_device = {
-    .name          = "S3 ViRGE (325) On-Board PCI",
-    .internal_name = "virge325_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = S3_VIRGE_325 | 0x100,
-    .init          = s3_virge_init,
-    .close         = s3_virge_close,
-    .reset         = s3_virge_reset,
-    .available     = NULL,
-    .speed_changed = s3_virge_speed_changed,
-    .force_redraw  = s3_virge_force_redraw,
-    .config        = s3_virge_onboard_config
-};
-
 const device_t s3_virge_vx_pci_device = {
     .name          = "S3 ViRGE/VX PCI",
     .internal_name = "virge_vx_pci",
@@ -7137,20 +7086,6 @@ const device_t s3_virge_dx_pci_device = {
     .speed_changed = s3_virge_speed_changed,
     .force_redraw  = s3_virge_force_redraw,
     .config        = s3_virge_dx_pci_config
-};
-
-const device_t s3_virge_375_onboard_pci_device = {
-    .name          = "S3 ViRGE/DX (375) On-Board PCI",
-    .internal_name = "virge375_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = S3_VIRGE_DX | 0x100,
-    .init          = s3_virge_init,
-    .close         = s3_virge_close,
-    .reset         = s3_virge_reset,
-    .available     = NULL,
-    .speed_changed = s3_virge_speed_changed,
-    .force_redraw  = s3_virge_force_redraw,
-    .config        = s3_virge_onboard_config
 };
 
 const device_t s3_virge_gx_pci_device = {

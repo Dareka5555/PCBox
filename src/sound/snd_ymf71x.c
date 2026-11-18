@@ -1067,20 +1067,6 @@ static const device_config_t ymf71x_config[] = {
   // clang-format on
 };
 
-const device_t ymf715_onboard_device = {
-    .name          = "Yamaha YMF715 (OPL3-SA3) (On-Board)",
-    .internal_name = "ymf715_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = 0x102,
-    .init          = ymf71x_init,
-    .close         = ymf71x_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = ymf71x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = ymf71x_config
-};
-
 const device_t ymf718_device = {
     .name          = "Yamaha YMF718 (OPL3-SA2)",
     .internal_name = "ymf718",

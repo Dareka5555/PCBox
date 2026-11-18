@@ -4501,20 +4501,6 @@ const device_t tgui9440_pci_device = {
     .config        = tgui9440_config
 };
 
-const device_t tgui9440_onboard_pci_device = {
-    .name          = "Trident TGUI 9440AGi On-Board PCI",
-    .internal_name = "tgui9440_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = TGUI_9440 | ONBOARD,
-    .init          = tgui_init,
-    .close         = tgui_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = tgui_speed_changed,
-    .force_redraw  = tgui_force_redraw,
-    .config        = tgui9440_config
-};
-
 const device_t tgui9660_pci_device = {
     .name          = "Trident TGUI 9660XGi PCI",
     .internal_name = "tgui9660_pci",
@@ -4527,20 +4513,6 @@ const device_t tgui9660_pci_device = {
     .speed_changed = tgui_speed_changed,
     .force_redraw  = tgui_force_redraw,
     .config        = tgui96xx_config
-};
-
-const device_t tgui9660_onboard_pci_device = {
-    .name          = "Trident TGUI 9660XGi On-Board PCI",
-    .internal_name = "tgui9660_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = TGUI_9660 | ONBOARD,
-    .init          = tgui_init,
-    .close         = tgui_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = tgui_speed_changed,
-    .force_redraw  = tgui_force_redraw,
-    .config        = tgui9440_config
 };
 
 const device_t tgui9680_pci_device = {

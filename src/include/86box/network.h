@@ -262,13 +262,11 @@ extern const device_t pcnet_am79c960_vlb_device;
 extern const device_t pcnet_am79c961_device;
 extern const device_t pcnet_am79c961a_device;
 extern const device_t pcnet_am79c970a_device;
-extern const device_t pcnet_am79c970a_onboard_device;
 extern const device_t pcnet_am79c973_device;
 extern const device_t pcnet_am79c970_device;
 extern const device_t pcnet_am79c971_device;
 extern const device_t pcnet_am79c972_device;
 extern const device_t pcnet_am79c975_device;
-extern const device_t pcnet_am79c973_onboard_device;
 extern const device_t pcnet_am79c974_device;
 
 /* Modem */
@@ -282,16 +280,11 @@ extern const device_t plip_device;
 
 /* Realtek RTL8139C+ */
 extern const device_t rtl8139c_plus_device;
-extern const device_t rtl8139c_plus_onboard_device;
 
 /* Intel 8255x */
 extern const device_t i82557_device;
 extern const device_t i82558_device;
-extern const device_t i82557b_onboard_device;
-extern const device_t i82558b_onboard_device;
 extern const device_t nec_pk_ug_x006_device;
-extern const device_t i82559c_onboard_device;
-extern const device_t i82559er_onboard_device;
 
 /* DEC Tulip */
 extern const device_t dec_tulip_device;
@@ -311,7 +304,6 @@ extern const device_t ibm_ethernet_efe5_device;
 
 /* National Semiconductor */
 extern const device_t dp83815_device;
-extern const device_t dp83815_onboard_device;
 
 /* VIA Rhine */
 extern const device_t via_vt86c100a_device;

@@ -379,34 +379,24 @@ extern const device_t mach32_onboard_pci_device;
 extern void da2_device_add(void);
 
 /* IBM PS/2 Plasma Display Adapter */
-extern const device_t ibm_plasma_vga_device;
 
 /* ATi Mach64 */
 extern const device_t mach64gx_isa_device;
 extern const device_t mach64gx_vlb_device;
-extern const device_t mach64gx_vlb_onboard_device;
 extern const device_t mach64gx_xpression_vlb_device;
 extern const device_t mach64gx_pci_device;
-extern const device_t mach64gx_pci_onboard_device;
 extern const device_t mach64ct_device;
-extern const device_t mach64ct_onboard_device;
 extern const device_t mach64vt_device;
 extern const device_t mach64vt2_device;
 extern const device_t mach64gt_device;
-extern const device_t mach64gt_onboard_device;
 extern const device_t mach64rage2_device;
-extern const device_t mach64rage2_onboard_device;
 extern const device_t mach64gtb_device;
-extern const device_t mach64gtb_onboard_device;
 extern const device_t mach64gtc_device;
 extern const device_t mach64gtc_agp_device;
 extern const device_t mach64ragepro_device;
 extern const device_t mach64ragepro_pci_device;
 extern const device_t mach64ragexl_pci_device;
 extern const device_t mach64ragelt_agp_device;
-extern const device_t mach64ragepro_onboard_device;
-extern const device_t mach64ragepro_gd_onboard_device;
-extern const device_t mach64vt3_onboard_device;
 extern const device_t ati_rage128_pro_device;
 extern const device_t ati_xpert128_pci_device;
 extern const device_t ati_rage128_maxx_device;
@@ -432,51 +422,32 @@ extern const device_t bochs_svga_device;
 
 /* Chips & Technologies */
 extern const device_t chips_69000_device;
-extern const device_t chips_69000_onboard_device;
 extern const device_t chips_82c450_device;
 extern const device_t chips_82c451_device;
 extern const device_t chips_82c452_device;
 
 /* Cirrus Logic GD54xx */
 extern const device_t gd5401_isa_device;
-extern const device_t gd5401_onboard_device;
 extern const device_t gd5402_isa_device;
-extern const device_t gd5402_onboard_device;
-extern const device_t gd5402_onboard_commodore_device;
 extern const device_t gd5420_isa_device;
-extern const device_t gd5420_onboard_device;
 extern const device_t gd5422_isa_device;
 extern const device_t gd5424_vlb_device;
-extern const device_t gd5424_onboard_device;
 extern const device_t gd5426_isa_device;
 extern const device_t gd5426_vlb_device;
 extern const device_t gd5426_mca_device;
-extern const device_t gd5426_onboard_isa_device;
-extern const device_t gd5426_onboard_device;
 extern const device_t gd5428_isa_device;
 extern const device_t gd5428_vlb_device;
-extern const device_t gd5428_vlb_onboard_device;
-extern const device_t gd5428_vlb_onboard_pb450_device;
-extern const device_t gd5428_vlb_onboard_tandy_device;
 extern const device_t gd5428_mca_jp_device;
 extern const device_t gd5428_mca_us_device;
-extern const device_t gd5428_onboard_device;
-extern const device_t gd5428_onboard_vlb_device;
 extern const device_t gd5429_isa_device;
 extern const device_t gd5429_vlb_device;
 extern const device_t gd5430_vlb_device;
-extern const device_t gd5430_onboard_vlb_device;
 extern const device_t gd5430_pci_device;
-extern const device_t gd5430_onboard_pci_device;
 extern const device_t gd5434_isa_device;
-extern const device_t gd5434_onboard_pci_device;
 extern const device_t gd5434_vlb_device;
 extern const device_t gd5434_pci_device;
 extern const device_t gd5436_pci_device;
-extern const device_t gd5436_onboard_pci_device;
-extern const device_t gd5436_onboard_pci_ics_device;
 extern const device_t gd5440_pci_device;
-extern const device_t gd5440_onboard_pci_device;
 extern const device_t gd5446_pci_device;
 extern const device_t gd5480_pci_device;
 
@@ -492,7 +463,6 @@ extern const device_t cga_pravetz_device;
 /* Compaq CGA */
 extern const device_t compaq_cga_device;
 extern const device_t compaq_cga_2_device;
-extern const device_t compaq_plasma_device;
 
 /* Olivetti OGC */
 extern const device_t ogc_device;
@@ -514,7 +484,6 @@ extern const device_t et4000_mca_device;
 /* Tseng ET4000-W32x */
 extern const device_t et4000w32_isa_device;
 extern const device_t et4000w32_vlb_device;
-extern const device_t et4000w32_onboard_device;
 extern const device_t et4000w32i_isa_device;
 extern const device_t et4000w32i_vlb_device;
 extern const device_t et4000w32p_vlb_device;
@@ -577,10 +546,8 @@ extern void           paradise_wd90c20_vga_disable(void *priv, uint16_t port);
 extern void           paradise_wd90c20_vga_enable(void *priv, uint16_t port);
 extern const device_t paradise_wd90c30_device;
 extern const device_t paradise_wd90c31_device;
-extern const device_t paradise_wd90c31_onboard_device;
 extern const device_t paradise_wd90c33_device;
 extern const device_t paradise_wd90c33_vlb_device;
-extern const device_t paradise_wd90c33_onboard_device;
 
 /* Quadram Quadcolor I / I + II */
 extern const device_t quadcolor_device;
@@ -591,12 +558,6 @@ extern const device_t realtek_rtg3106_device;
 
 /* S3 9XX/8XX/Vision/Trio */
 /* On-board */
-extern const device_t s3_86c805_onboard_vlb_device;
-extern const device_t s3_trio32_onboard_vlb_device;
-extern const device_t s3_trio32_onboard_pci_device;
-extern const device_t s3_trio64_onboard_pci_device;
-extern const device_t s3_trio64vplus_onboard_pci_device;
-extern const device_t s3_trio64v2dx_onboard_pci_device;
 /* External */
 extern const device_t s3_86c911_isa_device;
 extern const device_t s3_86c924_isa_device;
@@ -623,10 +584,8 @@ extern const device_t s3_trio64v2dx_pci_device;
 
 /* S3 ViRGE */
 extern const device_t s3_virge_pci_device;
-extern const device_t s3_virge_325_onboard_pci_device;
 extern const device_t s3_virge_vx_pci_device;
 extern const device_t s3_virge_dx_pci_device;
-extern const device_t s3_virge_375_onboard_pci_device;
 extern const device_t s3_virge_gx_pci_device;
 extern const device_t s3_virge_gx2_pci_device;
 extern const device_t s3_virge_gx2_agp_device;
@@ -637,15 +596,12 @@ extern const device_t s3_trio3d2x_agp_device;
 extern const device_t sigma_device;
 
 /* SiS */
-extern const device_t sis6306_onboard_device;
 
 /* Trident TGUI 94x0 */
 extern const device_t tgui9400cxi_device;
 extern const device_t tgui9440_vlb_device;
 extern const device_t tgui9440_pci_device;
-extern const device_t tgui9440_onboard_pci_device;
 extern const device_t tgui9660_pci_device;
-extern const device_t tgui9660_onboard_pci_device;
 extern const device_t tgui9680_pci_device;
 
 /* Weitek Power 9100 */
@@ -658,7 +614,6 @@ extern const device_t ibm_ps1_2121_device;
 
 /* Trident TVGA 8900 */
 extern const device_t tvga8900_device;
-extern const device_t tvga8900d_onboard_device;
 extern const device_t tvga9000b_device;
 
 /* IBM VGA */
@@ -674,7 +629,6 @@ extern const device_t voodoo_3_1000_device;
 extern const device_t voodoo_3_1000_agp_device;
 extern const device_t voodoo_3_2000_device;
 extern const device_t voodoo_3_2000_agp_device;
-extern const device_t voodoo_3_2000_agp_onboard_8m_device;
 extern const device_t voodoo_3_3000_device;
 extern const device_t voodoo_3_3000_agp_device;
 extern const device_t voodoo_3_3500_agp_device;
@@ -693,9 +647,6 @@ extern const device_t wy700_device;
 extern const device_t v6355d_device;
 
 /* Tandy */
-extern const device_t tandy_1000_video_device;
-extern const device_t tandy_1000hx_video_device;
-extern const device_t tandy_1000sl_video_device;
 
 /* Hitachi HD44780 character LCD */
 extern const device_t hd44780_device;

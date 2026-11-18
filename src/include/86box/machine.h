@@ -1327,17 +1327,10 @@ extern int tandy1k_eeprom_read(void);
 #ifdef EMU_DEVICE_H
 extern const device_t  tandy_1000sx_video_device;
 #endif
-#ifdef EMU_DEVICE_H
-extern const device_t  tandy_1000hx_video_device;
-#endif
-#ifdef EMU_DEVICE_H
-extern const device_t  tandy_1000sl_video_device;
-#endif
 
 /* m_tandy2k.c */
 #ifdef EMU_DEVICE_H
 extern const device_t  tandy_2000_device;
-extern const device_t  tandy_2000_video_device;
 #endif
 
 /* m_v86p.c */

@@ -5943,40 +5943,6 @@ static const device_config_t gd5430_vlb_config[] = {
     { .name = "", .description = "", .type = CONFIG_END }
 };
 
-static const device_config_t gd5430_onboard_vlb_config[] = {
-    {
-        .name           = "memory",
-        .description    = "Memory size",
-        .type           = CONFIG_SELECTION,
-        .default_string = NULL,
-        .default_int    = 2,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = {
-            { .description = "1 MB", .value = 1 },
-            { .description = "2 MB", .value = 2 },
-            { .description = ""                 }
-        },
-        .bios           = { { 0 } }
-    },
-    {
-        .name           = "lfb_base",
-        .description    = "Linear framebuffer base",
-        .type           = CONFIG_SELECTION,
-        .default_string = NULL,
-        .default_int    = 2048,
-        .file_filter    = NULL,
-        .spinner        = { 0 },
-        .selection      = {
-            { .description = "32 MB", .value = 32 },
-            { .description = "64 MB", .value = 64 },
-            { .description = "2048 MB", .value = 2048 },
-            { .description = ""                 }
-        },
-        .bios           = { { 0 } }
-    },
-    { .name = "", .description = "", .type = CONFIG_END }
-};
 
 static const device_config_t gd5434_isa_config[] = {
     {
@@ -6154,21 +6120,6 @@ const device_t gd5401_isa_device = {
     .config        = NULL
 };
 
-const device_t gd5401_onboard_device = {
-    .name          = "Cirrus Logic GD5401 (ISA) (On-Board)",
-    .internal_name = "cl_gd5402_onboard",
-    .flags         = DEVICE_ISA16,
-    .local         = CIRRUS_ID_CLGD5401 | 0x100,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .alias         = "ACUMOS AVGA1",
-    .config        = NULL
-};
-
 const device_t gd5402_isa_device = {
     .name          = "Cirrus Logic GD5402 (ISA)",
     .internal_name = "cl_gd5402_isa",
@@ -6180,37 +6131,6 @@ const device_t gd5402_isa_device = {
     .available     = gd5402_available,
     .speed_changed = gd54xx_speed_changed,
     .force_redraw  = gd54xx_force_redraw,
-    .alias         = "ACUMOS AVGA2",
-    .config        = gd5402_config
-};
-
-const device_t gd5402_onboard_device = {
-    .name          = "Cirrus Logic GD5402 (ISA) (On-Board)",
-    .internal_name = "cl_gd5402_onboard",
-    .flags         = DEVICE_ISA16,
-    .local         = CIRRUS_ID_CLGD5402 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .alias         = "ACUMOS AVGA2",
-    .config        = gd5402_config
-};
-
-const device_t gd5402_onboard_commodore_device = {
-    .name          = "Cirrus Logic GD5402 (ISA) (On-Board) (Commodore)",
-    .internal_name = "cl_gd5402_onboard_commodore",
-    .flags         = DEVICE_ISA16,
-    .local         = CIRRUS_ID_CLGD5402 | 0x100,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .machine       = "Commodore",
     .alias         = "ACUMOS AVGA2",
     .config        = gd5402_config
 };
@@ -6227,20 +6147,6 @@ const device_t gd5420_isa_device = {
     .speed_changed = gd54xx_speed_changed,
     .force_redraw  = gd54xx_force_redraw,
     .config        = gd542x_config,
-};
-
-const device_t gd5420_onboard_device = {
-    .name          = "Cirrus Logic GD5420 (ISA) (On-Board)",
-    .internal_name = "cl_gd5420_onboard",
-    .flags         = DEVICE_ISA16,
-    .local         = CIRRUS_ID_CLGD5420 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = NULL,
 };
 
 const device_t gd5422_isa_device = {
@@ -6271,20 +6177,6 @@ const device_t gd5424_vlb_device = {
     .close         = gd54xx_close,
     .reset         = gd54xx_reset,
     .available     = gd5424_available,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd542x_config,
-};
-
-const device_t gd5424_onboard_device = {
-    .name          = "Cirrus Logic GD5424 (VLB) (On-Board)",
-    .internal_name = "cl_gd5424_onboard",
-    .flags         = DEVICE_VLB,
-    .local         = CIRRUS_ID_CLGD5424 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
     .speed_changed = gd54xx_speed_changed,
     .force_redraw  = gd54xx_force_redraw,
     .config        = gd542x_config,
@@ -6336,34 +6228,6 @@ const device_t gd5426_mca_device = {
     .force_redraw  = gd54xx_force_redraw,
     .alias         = "Reply Video Adapter",
     .config        = gd542x_1mb_config
-};
-
-const device_t gd5426_onboard_isa_device = {
-    .name          = "Cirrus Logic GD5426 (ISA) (On-Board)",
-    .internal_name = "cl_gd5426_onboard",
-    .flags         = DEVICE_ISA16,
-    .local         = CIRRUS_ID_CLGD5426 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = gd5428_isa_available,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd542x_config
-};
-
-const device_t gd5426_onboard_device = {
-    .name          = "Cirrus Logic GD5426 (VLB) (On-Board)",
-    .internal_name = "cl_gd5426_onboard",
-    .flags         = DEVICE_VLB,
-    .local         = CIRRUS_ID_CLGD5426 | 0x200 | 0x1000,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = NULL
 };
 
 const device_t gd5428_isa_device = {
@@ -6428,80 +6292,6 @@ const device_t gd5428_mca_us_device = {
     .config        = NULL
 };
 
-const device_t gd5428_onboard_device = {
-    .name          = "Cirrus Logic GD5428 (ISA) (On-Board)",
-    .internal_name = "cl_gd5428_onboard",
-    .flags         = DEVICE_ISA16,
-    .local         = CIRRUS_ID_CLGD5428 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = gd5428_isa_available,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd542x_config
-};
-
-const device_t gd5428_vlb_onboard_device = {
-    .name          = "Cirrus Logic GD5428 (VLB) (On-Board)",
-    .internal_name = "cl_gd5428_vlb_onboard",
-    .flags         = DEVICE_VLB,
-    .local         = CIRRUS_ID_CLGD5428 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd542x_2mb_config
-};
-
-const device_t gd5428_onboard_vlb_device = {
-    .name          = "Cirrus Logic GD5428 (VLB) (On-Board) (1MB)",
-    .internal_name = "cl_gd5428_onboard_vlb",
-    .flags         = DEVICE_VLB,
-    .local         = CIRRUS_ID_CLGD5428 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    /* Not really a machine but let's reuse it. */
-    .machine       = "1MB",
-    .config        = gd542x_config
-};
-
-const device_t gd5428_vlb_onboard_pb450_device = {
-    .name          = "Cirrus Logic GD5428 (VLB) (On-Board) (PB450)",
-    .internal_name = "cl_gd5428_vlb_onboard_pb450",
-    .flags         = DEVICE_VLB,
-    .local         = CIRRUS_ID_CLGD5428 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .machine       = "PB450",
-    .config        = gd542x_1mb_config
-};
-
-const device_t gd5428_vlb_onboard_tandy_device = {
-    .name          = "Cirrus Logic GD5428 (VLB) (On-Board) (Tandy)",
-    .internal_name = "cl_gd5428_vlb_onboard_tandy",
-    .flags         = DEVICE_VLB,
-    .local         = CIRRUS_ID_CLGD5428 | 0x200 | 0x1000,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .machine       = "Tandy",
-    .config        = NULL
-};
-
 const device_t gd5429_isa_device = {
     .name          = "Cirrus Logic GD5429 (ISA)",
     .internal_name = "cl_gd5429_isa",
@@ -6549,20 +6339,6 @@ const device_t gd5430_vlb_device = {
     .config        = gd5430_vlb_config
 };
 
-const device_t gd5430_onboard_vlb_device = {
-    .name          = "Cirrus Logic GD5430 (VLB) (On-Board)",
-    .internal_name = "cl_gd5430_onboard_vlb",
-    .flags         = DEVICE_VLB,
-    .local         = CIRRUS_ID_CLGD5430 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd5430_onboard_vlb_config
-};
-
 const device_t gd5430_pci_device = {
     .name          = "Cirrus Logic GD5430 (PCI)",
     .internal_name = "cl_gd5430_pci",
@@ -6572,20 +6348,6 @@ const device_t gd5430_pci_device = {
     .close         = gd54xx_close,
     .reset         = gd54xx_reset,
     .available     = gd5430_available,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd543x_2mb_config
-};
-
-const device_t gd5430_onboard_pci_device = {
-    .name          = "Cirrus Logic GD5430 (PCI) (On-Board)",
-    .internal_name = "cl_gd5430_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = CIRRUS_ID_CLGD5430 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
     .speed_changed = gd54xx_speed_changed,
     .force_redraw  = gd54xx_force_redraw,
     .config        = gd543x_2mb_config
@@ -6608,20 +6370,6 @@ const device_t gd5434_isa_device = {
     .speed_changed = gd54xx_speed_changed,
     .force_redraw  = gd54xx_force_redraw,
     .config        = gd5434_isa_config
-};
-
-const device_t gd5434_onboard_pci_device = {
-    .name          = "Cirrus Logic GD5434-4 (PCI) (On-Board)",
-    .internal_name = "cl_gd5434_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = CIRRUS_ID_CLGD5434 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd543x_2mb_config
 };
 
 const device_t gd5434_vlb_device = {
@@ -6652,35 +6400,6 @@ const device_t gd5434_pci_device = {
     .config        = gd543x_4mb_config
 };
 
-const device_t gd5436_onboard_pci_device = {
-    .name          = "Cirrus Logic GD5436 (PCI) (On-Board)",
-    .internal_name = "cl_gd5436_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = CIRRUS_ID_CLGD5436 | 0x200,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd543x_2mb_config
-};
-
-const device_t gd5436_onboard_pci_ics_device = {
-    .name          = "Cirrus Logic GD5436 (PCI) (On-Board) (ICS)",
-    .internal_name = "cl_gd5436_onboard_pci_ics",
-    .flags         = DEVICE_PCI,
-    .local         = CIRRUS_ID_CLGD5436 | 0x200 | 0x1000,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .machine       = "ICS",
-    .config        = NULL
-};
-
 const device_t gd5436_pci_device = {
     .name          = "Cirrus Logic GD5436 (PCI)",
     .internal_name = "cl_gd5436_pci",
@@ -6693,20 +6412,6 @@ const device_t gd5436_pci_device = {
     .speed_changed = gd54xx_speed_changed,
     .force_redraw  = gd54xx_force_redraw,
     .config        = gd543x_4mb_config
-};
-
-const device_t gd5440_onboard_pci_device = {
-    .name          = "Cirrus Logic GD5440 (PCI) (On-Board)",
-    .internal_name = "cl_gd5440_onboard_pci",
-    .flags         = DEVICE_PCI,
-    .local         = CIRRUS_ID_CLGD5440 | 0x600,
-    .init          = gd54xx_init,
-    .close         = gd54xx_close,
-    .reset         = gd54xx_reset,
-    .available     = NULL,
-    .speed_changed = gd54xx_speed_changed,
-    .force_redraw  = gd54xx_force_redraw,
-    .config        = gd543x_2mb_config
 };
 
 const device_t gd5440_pci_device = {

@@ -9817,20 +9817,6 @@ const device_t sb_16_device = {
     .config        = sb_16_config
 };
 
-const device_t sb_vibra16c_onboard_device = {
-    .name          = "Sound Blaster ViBRA 16C (On-Board)",
-    .internal_name = "sb_vibra16c_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = SB_VIBRA16C,
-    .init          = sb_vibra16_pnp_init,
-    .close         = sb_close,
-    .reset         = NULL,
-    .available     = sb_vibra16c_available,
-    .speed_changed = sb_speed_changed,
-    .force_redraw  = NULL,
-    .config        = sb_vibra16_pnp_config
-};
-
 const device_t sb_vibra16c_device = {
     .name          = "Sound Blaster ViBRA 16C",
     .internal_name = "sb_vibra16c",
@@ -9840,20 +9826,6 @@ const device_t sb_vibra16c_device = {
     .close         = sb_close,
     .reset         = NULL,
     .available     = sb_vibra16c_available,
-    .speed_changed = sb_speed_changed,
-    .force_redraw  = NULL,
-    .config        = sb_vibra16_pnp_config
-};
-
-const device_t sb_vibra16cl_onboard_device = {
-    .name          = "Sound Blaster ViBRA 16CL (On-Board)",
-    .internal_name = "sb_vibra16cl_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = SB_VIBRA16CL,
-    .init          = sb_vibra16_pnp_init,
-    .close         = sb_close,
-    .reset         = NULL,
-    .available     = sb_vibra16cl_available,
     .speed_changed = sb_speed_changed,
     .force_redraw  = NULL,
     .config        = sb_vibra16_pnp_config
@@ -9873,20 +9845,6 @@ const device_t sb_vibra16cl_device = {
     .config        = sb_vibra16_pnp_config
 };
 
-const device_t sb_vibra16s_onboard_device = {
-    .name          = "Sound Blaster ViBRA 16S (On-Board)",
-    .internal_name = "sb_vibra16s_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = FM_YMF289B,
-    .init          = sb_16_init,
-    .close         = sb_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = sb_speed_changed,
-    .force_redraw  = NULL,
-    .config        = sb_16_config
-};
-
 const device_t sb_vibra16s_device = {
     .name          = "Sound Blaster ViBRA 16S",
     .internal_name = "sb_vibra16s",
@@ -9899,20 +9857,6 @@ const device_t sb_vibra16s_device = {
     .speed_changed = sb_speed_changed,
     .force_redraw  = NULL,
     .config        = sb_vibra16_config
-};
-
-const device_t sb_vibra16xv_onboard_device = {
-    .name          = "Sound Blaster ViBRA 16XV (On-Board)",
-    .internal_name = "sb_vibra16xv_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = SB_VIBRA16XV,
-    .init          = sb_vibra16_pnp_init,
-    .close         = sb_close,
-    .reset         = NULL,
-    .available     = sb_vibra16xv_available,
-    .speed_changed = sb_speed_changed,
-    .force_redraw  = NULL,
-    .config        = sb_vibra16_pnp_config
 };
 
 const device_t sb_vibra16xv_device = {
@@ -10402,18 +10346,4 @@ const device_t ess_1869_device = {
     .config        = ess_1688_pnp_config,
     .short_name    = "ESS ES1869",
     .ide_boards    = ide_boards_quaternary
-};
-
-const device_t ess_1869_onboard_device = {
-    .name          = "ESS AudioDrive ES1869 (On-Board)",
-    .internal_name = "ess_es1869_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = 1 | 2,
-    .init          = ess_186x_init,
-    .close         = sb_close,
-    .reset         = NULL,
-    .available     = NULL,
-    .speed_changed = sb_speed_changed,
-    .force_redraw  = NULL,
-    .config        = ess_1688_pnp_config
 };

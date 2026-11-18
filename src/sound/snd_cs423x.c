@@ -1328,20 +1328,6 @@ const device_t cs4232_device = {
     .config        = NULL
 };
 
-const device_t cs4232_onboard_device = {
-    .name          = "Crystal CS4232 (On-Board)",
-    .internal_name = "cs4232_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = CRYSTAL_CS4232 | CRYSTAL_NOEEPROM,
-    .init          = cs423x_init,
-    .close         = cs423x_close,
-    .reset         = cs423x_reset,
-    .available     = cs423x_available,
-    .speed_changed = cs423x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = NULL
-};
-
 const device_t cs4235_device = {
     .name          = "Crystal CS4235",
     .internal_name = "cs4235",
@@ -1356,53 +1342,11 @@ const device_t cs4235_device = {
     .config        = NULL
 };
 
-const device_t cs4235_onboard_device = {
-    .name          = "Crystal CS4235 (On-Board)",
-    .internal_name = "cs4235_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = CRYSTAL_CS4235 | CRYSTAL_NOEEPROM,
-    .init          = cs423x_init,
-    .close         = cs423x_close,
-    .reset         = cs423x_reset,
-    .available     = cs423x_available,
-    .speed_changed = cs423x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = NULL
-};
-
-const device_t cs4236_onboard_device = {
-    .name          = "Crystal CS4236 (On-Board)",
-    .internal_name = "cs4236_onboard",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = CRYSTAL_CS4236 | CRYSTAL_NOEEPROM,
-    .init          = cs423x_init,
-    .close         = cs423x_close,
-    .reset         = cs423x_reset,
-    .available     = cs423x_available,
-    .speed_changed = cs423x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = NULL
-};
-
 const device_t cs4236b_device = {
     .name          = "Crystal CS4236B",
     .internal_name = "cs4236b",
     .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
     .local         = CRYSTAL_CS4236B,
-    .init          = cs423x_init,
-    .close         = cs423x_close,
-    .reset         = cs423x_reset,
-    .available     = cs423x_available,
-    .speed_changed = cs423x_speed_changed,
-    .force_redraw  = NULL,
-    .config        = NULL
-};
-
-const device_t cs4236b_onboard_device = {
-    .name          = "Crystal CS4236B (On-Board)",
-    .internal_name = "cs4236b",
-    .flags         = DEVICE_ISA16 | DEVICE_AUDIO_IN,
-    .local         = CRYSTAL_CS4236B | CRYSTAL_NOEEPROM,
     .init          = cs423x_init,
     .close         = cs423x_close,
     .reset         = cs423x_reset,
