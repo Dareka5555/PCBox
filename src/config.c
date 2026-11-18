@@ -3168,7 +3168,8 @@ config_load(void)
         hide_status_bar      = 0;
         hide_tool_bar        = 0;
         scale                = 1;
-        machine              = machine_get_machine_from_internal_name("ibmpc");
+        /* New configurations default to the first supported machine. */
+        machine              = 0;
         dpi_scale            = 1;
         force_constant_mouse = 0;
         fast_forward_on_start = fast_forward_new_machines;
