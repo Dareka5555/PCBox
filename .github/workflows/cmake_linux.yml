@@ -73,18 +73,21 @@ jobs:
     runs-on: ${{ matrix.environment.runner }}
 
     strategy:
+      fail-fast: true
       matrix:
-        # Build types marked manual are only built on manual runs with the
-        # full matrix option
+        # Development variants are available through workflow_dispatch with
+        # full_matrix enabled; pushes and pull requests build Regular only.
         build:
           - name: Regular
             preset: regular
           - name: Dev Debug
             slug: Dev-Debug
             preset: dev_debug
+            manual: true
           - name: Dev
             slug: Dev
             preset: development
+            manual: true
         ui:
           - name: SDL GUI
             slug: SDL

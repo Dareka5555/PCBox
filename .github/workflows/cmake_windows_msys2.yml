@@ -75,9 +75,10 @@ jobs:
         shell: msys2 {0}
 
     strategy:
+      fail-fast: true
       matrix:
-        # Build types and user interfaces marked manual are only built on
-        # manual runs with the full matrix option
+        # Development variants and non-default UIs are available through
+        # workflow_dispatch with full_matrix enabled.
         build:
           - name: Regular
             preset: regular
@@ -88,6 +89,7 @@ jobs:
           - name: Dev
             preset: development
             slug: -Dev
+            manual: true
         ui:
           - name: Qt 5 GUI
             qt: on
@@ -124,6 +126,13 @@ jobs:
           - msystem: CLANGARM64
             slug: -arm64
             runner: windows-11-arm
+        # Keep push/PR runs small; workflow_dispatch with full_matrix=true
+        # opts back into every development/UI combination.
+        exclude:
+          - build:
+              manual: ${{ !inputs.full_matrix || 'never' }}
+          - ui:
+              manual: ${{ !inputs.full_matrix || 'never' }}
 
     steps:
       - name: Checkout repository
