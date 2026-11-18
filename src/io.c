@@ -452,14 +452,7 @@ inb(uint16_t port)
         }
     }
 
-    if (amstrad_latch & 0x80000000) {
-        if (port & 0x80)
-            amstrad_latch = AMSTRAD_NOLATCH | 0x80000000;
-        else if (port & 0x4000)
-            amstrad_latch = AMSTRAD_SW10 | 0x80000000;
-        else
-            amstrad_latch = AMSTRAD_SW9 | 0x80000000;
-    }
+
 
     if (!found ||
         (0) ||
@@ -617,14 +610,7 @@ inw(uint16_t port)
         ret = (ret8[1] << 8) | ret8[0];
     }
 
-    if (amstrad_latch & 0x80000000) {
-        if (port & 0x80)
-            amstrad_latch = AMSTRAD_NOLATCH | 0x80000000;
-        else if (port & 0x4000)
-            amstrad_latch = AMSTRAD_SW10 | 0x80000000;
-        else
-            amstrad_latch = AMSTRAD_SW9 | 0x80000000;
-    }
+
 
     if (!found || (port == 0x84) ||
         (0) ||
@@ -830,14 +816,7 @@ inl(uint16_t port)
         ret = (ret8[3] << 24) | (ret8[2] << 16) | (ret8[1] << 8) | ret8[0];
     }
 
-    if (amstrad_latch & 0x80000000) {
-        if (port & 0x80)
-            amstrad_latch = AMSTRAD_NOLATCH | 0x80000000;
-        else if (port & 0x4000)
-            amstrad_latch = AMSTRAD_SW10 | 0x80000000;
-        else
-            amstrad_latch = AMSTRAD_SW9 | 0x80000000;
-    }
+
 
     if (!found ||
         (0) ||

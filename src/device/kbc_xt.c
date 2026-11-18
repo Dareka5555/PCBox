@@ -95,7 +95,6 @@ typedef struct xtkbd_t {
 static uint8_t key_queue[16];
 static int     key_queue_start = 0;
 static int     key_queue_end   = 0;
-static int     is_t1x00 = 0;
 static int     is_amstrad = 0;
 
 #define kbd_adddata kbd_adddata_xt_common
@@ -201,38 +200,7 @@ void
 kbd_adddata_xt_common(uint16_t val)
 {
     /* Test for T1000 'Fn' key (Right Alt / Right Ctrl) */
-    if (is_t1x00) {
-        if (keyboard_recv(0x138) || keyboard_recv(0x11d)) { /* 'Fn' pressed */
-            t1000_syskey(0x00, 0x04, 0x00);                 /* Set 'Fn' indicator */
-            switch (val) {
-                case 0x45: /* Num Lock => toggle numpad */
-                    t1000_syskey(0x00, 0x00, 0x10);
-                    break;
-                case 0x47: /* Home => internal display */
-                    t1000_syskey(0x40, 0x00, 0x00);
-                    break;
-                case 0x49: /* PgDn => turbo on */
-                    t1000_syskey(0x80, 0x00, 0x00);
-                    break;
-                case 0x4D: /* Right => toggle LCD font */
-                    t1000_syskey(0x00, 0x00, 0x20);
-                    break;
-                case 0x4F: /* End => external display */
-                    t1000_syskey(0x00, 0x40, 0x00);
-                    break;
-                case 0x51: /* PgDn => turbo off */
-                    t1000_syskey(0x00, 0x80, 0x00);
-                    break;
-                case 0x54: /* SysRQ => toggle window */
-                    t1000_syskey(0x00, 0x00, 0x08);
-                    break;
 
-                default:
-                    break;
-            }
-        } else
-            t1000_syskey(0x04, 0x00, 0x00); /* Reset 'Fn' indicator */
-    }
 
     key_queue[key_queue_end] = val;
     kbd_log("XTkbd: %02X added to key queue at %i\n",
@@ -593,8 +561,6 @@ kbd_read(uint16_t port, void *priv)
                     ret |= (pc_cas_get_inp(cassette) ? 0x10 : 0);
             }
 
-            if (kbd->type == KBD_TYPE_TANDY)
-                ret |= (tandy1k_eeprom_read() ? 0x10 : 0);
             break;
 
         case 0x63: /* Keyboard Configuration Register (aka Port D) */
@@ -811,7 +777,6 @@ kbd_init(const device_t *info)
 
     timer_add(&kbd->send_delay_timer, kbd_poll, kbd, 1);
 
-    is_t1x00 = (kbd->type == KBD_TYPE_TOSHIBA);
 
     if (keyboard_type == KEYBOARD_TYPE_INTERNAL)
         keyboard_set_table(scancode_xt);

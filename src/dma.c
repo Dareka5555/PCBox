@@ -551,9 +551,6 @@ dma_set_drq(int channel, int set)
     dma_stat_rq_pc &= ~bit;
     if (set)
         dma_stat_rq_pc |= bit;
-    if (dma_ibm5140 && set && channel > 0 && channel < 4)
-        ibm5140_clock_wake();
-
     if (dma_xt8237_active() && (channel < 4) && !set &&
         (dma_xt8237.demand_active & bit)) {
         dma_xt8237_release_owner(channel);

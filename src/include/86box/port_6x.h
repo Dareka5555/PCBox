@@ -6,28 +6,11 @@
  *
  *          This file is part of the 86Box distribution.
  *
- *          Header for the implementation of Port 6x used by various
- *          machines.
- *
- * Authors: Miran Grca, <mgrca8@gmail.com>
- *
- *          Copyright 2021 Miran Grca.
+ *          Standard AT port 61 register.
  */
 #ifndef EMU_PORT_6X_H
 #define EMU_PORT_6X_H
 
-#ifdef _TIMER_H_
-typedef struct port_6x_t {
-    uint8_t refresh;
-    uint8_t flags;
-
-    pc_timer_t refresh_timer;
-} port_6x_t;
-#endif
-
 extern const device_t port_6x_device;
-extern const device_t port_6x_xi8088_device;
-extern const device_t port_6x_ps2_device;
-extern const device_t port_6x_olivetti_device;
 
-#endif /*EMU_PORT_6X_H*/
+#endif /* EMU_PORT_6X_H */

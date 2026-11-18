@@ -2232,7 +2232,6 @@ pc_run(void)
     /* Trigger a hard reset if one is pending. */
     if (hard_reset_pending) {
         hard_reset_pending = 0;
-        ibm5140_power_hard_off();
         debugger_reset_begin();
         pc_reset_hard_close();
         pc_reset_hard_init();
