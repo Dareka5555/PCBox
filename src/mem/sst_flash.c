@@ -905,18 +905,6 @@ sst_init(const device_t *info)
         }
     }
 
-    /* Set the requested logo display */
-    if ((0) &&
-        (info->local == (AMD | AMD29F002NBT | SIZE_2M))) {
-        uint8_t      *logo = &dev->chip->array[dev->chip->data_base + 0x3af70];
-        const uint8_t old  = *logo;
-
-        *logo &= 0xf0;
-        *logo |= machine_in530_boot_logo() & 0x0f;
-
-        if (*logo != old)
-            dev->chip->dirty = 1;
-    }
 
     sst = dev;
 
