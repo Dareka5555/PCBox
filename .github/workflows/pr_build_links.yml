@@ -125,7 +125,7 @@ jobs:
               echo "Showing the builds of [\`$run_sha\`]($run_url) instead." >> body.md
             fi
 
-            for platform in Windows Linux macOS; do
+            for platform in Windows Linux; do
               # Artifact names come from the pull request's workflow file, so
               # strip anything that could be interpreted as Markdown or HTML
               list=$(jq -r --arg platform "$platform" --arg base "https://github.com/$GH_REPO/actions/runs/$run_id/artifacts" \

@@ -45,6 +45,10 @@ project(PCBox
     HOMEPAGE_URL "https://pcbox-emu.xyz/"
     LANGUAGES C CXX)
 
+if(NOT WIN32 AND NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(FATAL_ERROR "PCBox supports only Windows and Linux hosts.")
+endif()
+
 if (NOT (CMAKE_SIZEOF_VOID_P STREQUAL "8"))
     message(FATAL_ERROR "Only 64-bit builds are supported.")
 endif()
@@ -114,6 +118,9 @@ if(HAIKU)
 endif()
 
 include(DetectTargetArch)
+if(NOT ARCH_X64)
+    message(FATAL_ERROR "PCBox supports only x86-64 hosts.")
+endif()
 include(CompilerFlags)
 
 # Optional features
