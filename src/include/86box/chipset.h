@@ -41,7 +41,6 @@ extern const device_t ali6117d_device;
 
 /* AMD */
 extern const device_t amd640_device;
-extern const device_t amd751_device;
 
 /* ASUS */
 extern const device_t asus48625_device;
