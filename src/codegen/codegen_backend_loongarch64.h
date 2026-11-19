@@ -5,7 +5,7 @@
 
 /* Same as the original PCem v15 value. Kept lower than arm64's 0x8000 /
    x86-64's 0x10000 until the block footprint has been measured on real
-   Loongson hardware (see codegen_backend_arm64.h for the reasoning). */
+   Loongson hardware. */
 #define BLOCK_SIZE  0x4000
 #define BLOCK_MASK  0x3fff
 #define BLOCK_START 0

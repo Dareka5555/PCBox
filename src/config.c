@@ -543,108 +543,18 @@ load_machine(void)
 {
     ini_section_t cat = ini_find_section(config, "Machine");
     const char   *p;
-    const char   *migrate_from = NULL;
     int           c;
     int           i;
-    int           j;
     int           speed;
     double        multi;
 
-    static const struct {
-        const char *old;
-        const char *new;
-        const char *new_bios;
-    } machine_migrations[] = {
-        { .old = "tandy", .new = "tandy1000sx", .new_bios = NULL },
-        { .old = "mr1217", .new = "325ax", .new_bios = "mr1217" },
-        { .old = "deskpro386_05_1988", .new = "deskpro386", .new_bios = "deskpro386_05_1988" },
-        { .old = "mr495", .new = "ami495", .new_bios = "mr495" },
-        { .old = "403tg_d", .new = "403tg", .new_bios = "403tg_d" },
-        { .old = "403tg_d_mr", .new = "403tg", .new_bios = "403tg_d_mr" },
-        { .old = "aptiva510", .new = "pc330_6573", .new_bios = "aptiva510" },
-        { .old = "ambradp60", .new = "batman", .new_bios = "ambradp60" },
-        { .old = "dellxp60", .new = "batman", .new_bios = "dellxp60" },
-        { .old = "586mc1", .new = "586is", .new_bios = NULL },
-        { .old = "ambradp90", .new = "plato", .new_bios = "ambradp90" },
-        { .old = "dellplato", .new = "plato", .new_bios = "dellplato" },
-        { .old = "430nx", .new = "586ip", .new_bios = NULL },
-        { .old = "p54tp4xe_mr", .new = "p54tp4xe", .new_bios = "p54tp4xe_mr" },
-        { .old = "gw2katx", .new = "thor", .new_bios = "gw2katx" },
-        { .old = "mrthor", .new = "thor", .new_bios = "mrthor" },
-        { .old = "equium5200", .new = "cu430hx", .new_bios = "equium5200" },
-        { .old = "infinia7200", .new = "tc430hx", .new_bios = "infinia7200" },
-        { .old = "dellvenus", .new = "vs440fx", .new_bios = "dellvenus" },
-        { .old = "gw2kvenus", .new = "vs440fx", .new_bios = "gw2kvenus" },
-        { .old = "lgibmx7g", .new = "ms6119", .new_bios = "lgibmx7g" },
-        { .old = "apas3", .new = "vim863s", .new_bios = NULL },
-        { 0 }
-    };
-
     p = ini_section_get_string(cat, "machine", NULL);
-    if (p != NULL) {
-        /* Migrate renamed machines. */
-        for (i = 0; machine_migrations[i].old; i++) {
-            if (!strcmp(p, machine_migrations[i].old)) {
-                machine = machine_get_machine_from_internal_name(machine_migrations[i].new);
-                if (machine != -1) {
-                    migrate_from = p;
-                    if (machine_migrations[i].new_bios)
-                        ini_set_string(config, machine_get_device(machine)->name, "bios", machine_migrations[i].new_bios);
-                }
-                break;
-            }
-        }
-        if (!migrate_from) {
-            machine = machine_get_machine_from_internal_name(p);
-            if (machine == -1) {
-                /* A machine this build does not have: the first machine
-                   takes its place. */
-                config_unsupported(STRING_UNSUPPORTED_MACHINE, p);
-                config_unsupported_machine = 1;
-                machine = 0;
-            }
-        }
-    } else {
+    machine = p ? machine_get_machine_from_internal_name(p) : 0;
+    if (machine < 0) {
+        /* Do not silently rewrite configurations for removed machines. */
+        config_unsupported(STRING_UNSUPPORTED_MACHINE, p);
+        config_unsupported_machine = 1;
         machine = 0;
-    }
-
-    if (machine >= machine_count())
-        machine = machine_count() - 1;
-
-    /* Copy NVR files when migrating a machine to a new NVR name. */
-    if (migrate_from && strcmp(migrate_from, machine_get_nvr_name())) {
-        char old_fn[256];
-        c = snprintf(old_fn, sizeof(old_fn), "%s.", migrate_from);
-        char new_fn[256];
-        i = snprintf(new_fn, sizeof(new_fn), "%s.", machine_get_nvr_name());
-
-        /* Iterate through NVR files. */
-        DIR *dirp = opendir(nvr_path("."));
-        if (dirp) {
-            struct dirent *entry;
-            while ((entry = readdir(dirp))) {
-                /* Check if this file corresponds to the old name. */
-                if (strncmp(entry->d_name, old_fn, c))
-                    continue;
-
-                /* Add extension to the new name. */
-                strcpy(&new_fn[i], &entry->d_name[c]);
-
-                /* Only copy if a file with the new name doesn't already exist. */
-                FILE *g = nvr_fopen(new_fn, "rb");
-                if (g == NULL) {
-                    FILE *f = nvr_fopen(entry->d_name, "rb");
-                    g       = nvr_fopen(new_fn, "wb");
-
-                    uint8_t buf[4096];
-                    while ((j = fread(buf, 1, sizeof(buf), f)))
-                        fwrite(buf, 1, j, g);
-
-                    fclose(f);
-                }
-                fclose(g);
-            }
-        }
     }
 
     cpu_override             = ini_section_get_int(cat, "cpu_override", 0);
@@ -653,11 +563,7 @@ load_machine(void)
     cpu_f                    = NULL;
     p                        = ini_section_get_string(cat, "cpu_family", NULL);
     if (p) {
-        /* Migrate CPU family changes. */
-        if ((machines[machine].init == machine_at_deskpro386_init) && !strcmp(p, "i386dx"))
-            cpu_f = cpu_get_family("i386dx_deskpro386");
-        else
-            cpu_f = cpu_get_family(p);
+        cpu_f = cpu_get_family(p);
 
         if (cpu_f && !cpu_family_is_eligible(cpu_f, machine)) /* only honor eligible families */
             cpu_f = NULL;
@@ -716,10 +622,8 @@ load_machine(void)
     p        = ini_section_get_string(cat, "fpu_type", "none");
     fpu_type = fpu_get_type(cpu_f, cpu, p);
 
-    mem_size = ini_section_get_int(cat, "mem_size", 64);
-
-    if (mem_size > machine_get_max_ram(machine))
-        mem_size = machine_get_max_ram(machine);
+    mem_size = ini_section_get_int(cat, "mem_size", machine_get_min_ram(machine));
+    mem_size = MAX(machine_get_min_ram(machine), MIN(mem_size, machine_get_max_ram(machine)));
 
     cpu_use_dynarec = !!ini_section_get_int(cat, "cpu_use_dynarec", 0);
     cpu_use_dynarec_fast = !!ini_section_get_int(cat, "cpu_use_dynarec_fast", 0);
@@ -3249,14 +3153,12 @@ config_load(void)
     if (config == NULL) {
         config = ini_new();
 
-        cpu_f = (cpu_family_t *) &cpu_families[0];
-        cpu   = 0;
+        load_machine();
 
         kbd_req_capture      = 0;
         hide_status_bar      = 0;
         hide_tool_bar        = 0;
         scale                = 1;
-        machine              = machine_get_machine_from_internal_name("ibmpc");
         dpi_scale            = 1;
         force_constant_mouse = 0;
         fast_forward_on_start = fast_forward_new_machines;
@@ -3264,14 +3166,13 @@ config_load(void)
         cpu_override_interpreter = 0;
         cpu_debug_regs_486       = 0;
 
-        fpu_type               = fpu_get_type(cpu_f, cpu, "none");
-        gfxcard[0]             = video_get_video_from_internal_name("cga");
+        gfxcard[0]             = video_get_video_from_internal_name("s3_trio64_pci");
         vid_api                = plat_vidapi("default");
         vid_resize             = 0;
         video_fullscreen_scale = 1;
         time_sync              = TIME_SYNC_ENABLED;
 
-        keyboard_type          = KEYBOARD_TYPE_PC_XT;
+        keyboard_type          = KEYBOARD_TYPE_PS2;
 
         for (int i = 0; i < HDC_MAX; i++)
             hdc_current[i]         = hdc_get_from_internal_name("none");
@@ -3300,7 +3201,6 @@ config_load(void)
 
         /* Unmute the CD audio on the first CD-ROM drive. */
         cdrom[0].sound_on = 1;
-        mem_size          = 64;
         isartc_type       = 0;
         isa_expansion_type = 0;
         gameport_card_type = GAMEPORT_CARD_AUTO;
@@ -3311,7 +3211,7 @@ config_load(void)
         for (i = 0; i < MCAMEM_MAX; i++)
             mcamem_type[i] = 0;
 
-        cassette_enable = 1;
+        cassette_enable = 0;
         memset(cassette_fname, 0x00, sizeof(cassette_fname));
         memcpy(cassette_mode, "load", strlen("load") + 1);
         cassette_pos          = 0;

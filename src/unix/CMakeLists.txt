@@ -149,9 +149,6 @@ endif()
 target_compile_definitions(plat PUBLIC _FILE_OFFSET_BITS=64)
 target_link_libraries(plat ${CMAKE_DL_LIBS})
 
-if(APPLE)
-    target_sources(plat PRIVATE macOSXGlue.m)
-endif()
 
 if(WIN32)
     enable_language(RC)

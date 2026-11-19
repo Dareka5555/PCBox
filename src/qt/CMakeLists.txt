@@ -53,22 +53,6 @@ find_package(Threads REQUIRED)
 find_package(Qt${QT_MAJOR} COMPONENTS Core Widgets Network OpenGL Gui REQUIRED)
 find_package(Qt${QT_MAJOR}LinguistTools REQUIRED NO_CMAKE_FIND_ROOT_PATH)
 
-if(APPLE AND MOLTENVK)
-    include(CheckCXXSourceCompiles)
-    set(CMAKE_REQUIRED_LIBRARIES Qt${QT_MAJOR}::Gui)
-    unset(QT_HAS_VULKAN CACHE)
-    check_cxx_source_compiles("#include <QtGui/qtguiglobal.h>
-#if !QT_CONFIG(vulkan)
-#error Qt was built without Vulkan support
-#endif
-int main() { return 0; }
-" QT_HAS_VULKAN)
-    unset(CMAKE_REQUIRED_LIBRARIES)
-
-    if(NOT QT_HAS_VULKAN)
-        message(FATAL_ERROR "MOLTENVK requires Qt to be built with Vulkan support (QT_CONFIG(vulkan)). Rebuild Qt with Vulkan enabled or configure with -DMOLTENVK=OFF.")
-    endif()
-endif()
 
 if(USE_QT6)
     set(QT_NO_PRIVATE_MODULE_WARNING ON)
@@ -97,14 +81,6 @@ if(QT_STATIC AND MINGW AND USE_QT6)
     endif()
 endif()
 
-# TODO: Is this the correct way to do this, and is it required on any
-# other platforms or with Qt 5?
-if(APPLE AND USE_QT6 AND VCPKG_TOOLCHAIN)
-    find_package(Qt6Gui/Qt6QCocoaIntegrationPlugin REQUIRED)
-    find_package(Qt6Widgets/Qt6QMacStylePlugin REQUIRED)
-    find_package(Qt6Gui/Qt6QICOPlugin REQUIRED)
-    find_package(Qt6Gui/Qt6QICNSPlugin REQUIRED)
-endif()
 
 if (UNIX)
     find_path(HAS_VDE "libvdeplug.h" PATHS ${VDE_INCLUDE_DIR} "/usr/include /usr/local/include" "/opt/homebrew/include" )
@@ -483,20 +459,6 @@ else()
     target_sources(plat PRIVATE ../unix/dummy_floppy_ioctl.c)
 endif()
 
-if (APPLE)
-    target_sources(ui PRIVATE macos_event_filter.mm)
-    if(MOLTENVK)
-        find_path(MOLTENVK_INCLUDE "vulkan/vulkan.h" PATHS "/opt/homebrew/opt/molten-vk/libexec/include" "/usr/local/opt/molten-vk/libexec/include" ${MOLTENVK_INCLUDE_DIR})
-        if (NOT MOLTENVK_INCLUDE)
-            message(FATAL_ERROR "Could not find vulkan/vulkan.h. If the headers are installed please use -DMOLTENVK_INCLUDE_DIR=/path/to/headers")
-        endif()
-        target_include_directories(ui PRIVATE ${MOLTENVK_INCLUDE})
-        find_library(MOLTENVK_LIB MoltenVK)
-        if (NOT MOLTENVK_LIB)
-            message(FATAL_ERROR "Could not find MoltenVK library")
-        endif()
-    endif()
-endif()
 
 if (WIN32)
     target_sources(ui PRIVATE
@@ -585,22 +547,6 @@ if(WIN32)
     endif()
 endif()
 
-# loads a macro to install Qt5 plugins on macOS
-# based on https://stackoverflow.com/questions/35612687/cmake-macos-x-bundle-with-bundleutiliies-for-qt-application
-macro(install_qt5_plugin _qt_plugin_name _runtime_plugins_var _prefix)
-    get_target_property(_qt_plugin_path "${_qt_plugin_name}" LOCATION)
-    get_filename_component(_qt_plugin_path "${_qt_plugin_path}" REALPATH) #adds a check to resolve any dylib symlinks so that the plugin is correctly copied to the bundle
-    if(EXISTS "${_qt_plugin_path}")
-        get_filename_component(_qt_plugin_file "${_qt_plugin_path}" NAME)
-        get_filename_component(_qt_plugin_type "${_qt_plugin_path}" PATH)
-        get_filename_component(_qt_plugin_type "${_qt_plugin_type}" NAME)
-        set(_qt_plugin_dest "${_prefix}/PlugIns/${_qt_plugin_type}")
-        install(FILES "${_qt_plugin_path}" DESTINATION "${_qt_plugin_dest}")
-        list(APPEND ${_runtime_plugins_var} "\${CMAKE_INSTALL_PREFIX_ABSOLUTE}/${_qt_plugin_dest}/${_qt_plugin_file}")
-    else()
-        message(FATAL_ERROR "QT plugin ${_qt_plugin_name} not found")
-    endif()
-endmacro()
 
 macro(install_bundle_library _library_path _installed_name _runtime_plugins_var _prefix)
     if(EXISTS "${_library_path}")
@@ -616,49 +562,6 @@ macro(install_bundle_library _library_path _installed_name _runtime_plugins_var 
     endif()
 endmacro()
 
-if (APPLE AND CMAKE_MACOSX_BUNDLE)
-    set(prefix "PCBox.app/Contents")
-    set(INSTALL_RUNTIME_DIR "${prefix}/MacOS")
-    set(INSTALL_CMAKE_DIR "${prefix}/Resources")
-    set(INSTALL_LIB_DIR "${prefix}/Frameworks")
-
-    # using the install_qt5_plugin to add Qt plugins into the macOS app bundle
-    install_qt5_plugin("Qt${QT_MAJOR}::QCocoaIntegrationPlugin" RUNTIME_PLUGINS ${prefix})
-    install_qt5_plugin("Qt${QT_MAJOR}::QMacStylePlugin" RUNTIME_PLUGINS ${prefix})
-    install_qt5_plugin("Qt${QT_MAJOR}::QICOPlugin" RUNTIME_PLUGINS ${prefix})
-    install_qt5_plugin("Qt${QT_MAJOR}::QICNSPlugin" RUNTIME_PLUGINS ${prefix})
-
-    # Install libraries that are loaded at runtime and not linked
-    install_bundle_library("${GHOSTSCRIPT_LIB}" "libgs.dylib" RUNTIME_PLUGINS ${INSTALL_LIB_DIR})
-    install_bundle_library("${VDE_LIB}" "libvdeplug.dylib" RUNTIME_PLUGINS ${INSTALL_LIB_DIR})
-    install_bundle_library("${MOLTENVK_LIB}" "libVulkan.dylib" RUNTIME_PLUGINS ${INSTALL_LIB_DIR})
-
-    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/qt.conf"
-        "[Paths]\nPlugins = PlugIns\n")
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/qt.conf"
-        DESTINATION "${INSTALL_CMAKE_DIR}")
-
-    # Path used for searching by FIND_XXX(), with appropriate suffixes added
-    if(CMAKE_PREFIX_PATH)
-        foreach(dir ${CMAKE_PREFIX_PATH})
-            list(APPEND DIRS "${dir}/bin" "${dir}/lib")
-        endforeach()
-    endif()
-
-    # Append Qt's lib folder which is two levels above Qt*Widgets_DIR
-    list(APPEND DIRS "${Qt${QT_MAJOR}Widgets_DIR}/../..")
-
-    include(InstallRequiredSystemLibraries)
-
-    install(CODE "
-        include(BundleUtilities)
-        get_filename_component(CMAKE_INSTALL_PREFIX_ABSOLUTE \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX} ABSOLUTE)
-        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX_ABSOLUTE}/PCBox.app\" \"${RUNTIME_PLUGINS}\" \"${DIRS}\")
-        execute_process(
-            COMMAND ${CMAKE_INSTALL_NAME_TOOL} -add_rpath \"@executable_path/../Frameworks/\"
-            \"\${CMAKE_INSTALL_PREFIX_ABSOLUTE}/${INSTALL_RUNTIME_DIR}/PCBox\")
-        ")
-endif()
 
 if (UNIX AND NOT APPLE AND NOT HAIKU)
     target_sources(ui PRIVATE x11_util.c)

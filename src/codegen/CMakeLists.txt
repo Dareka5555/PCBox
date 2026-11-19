@@ -57,13 +57,6 @@ if(DYNAREC)
             codegen_backend_x86-64_ops_sse.c
             codegen_backend_x86-64_uops.c
         )
-    elseif(ARCH STREQUAL "arm64")
-        target_sources(dynarec PRIVATE
-            codegen_backend_arm64.c
-            codegen_backend_arm64_ops.c
-            codegen_backend_arm64_uops.c
-            codegen_backend_arm64_imm.c
-        )
     elseif(ARCH STREQUAL "loongarch64")
         target_sources(dynarec PRIVATE
             codegen_backend_loongarch64.c

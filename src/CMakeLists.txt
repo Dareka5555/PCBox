@@ -20,9 +20,6 @@ if(NOT CMAKE_TOP_LEVEL_PROCESSED)
     message(FATAL_ERROR "Incorrect source directory specified. Delete your build directory and retry with the top-level directory instead")
 endif()
 
-if(APPLE)
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-endif()
 
 add_executable(PCBox
     86box.c
@@ -178,32 +175,11 @@ if(STATIC_BUILD)
     endif()
 endif()
 
-if(APPLE)
-    # Force using the newest library if it's installed by homebrew
-    set(CMAKE_FIND_FRAMEWORK LAST)
-
-    # setting our compilation target to macOS 10.15 Catalina if targeting Qt6,
-    # macOS 10.14 Mojave for vulkan support, 10.13 High Sierra otherwise
-    if (USE_QT6)
-        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
-    else()
-        if(MOLTENVK)
-            set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
-        else()
-            set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13")
-        endif()
-    endif()
-endif()
 
 find_package(Freetype REQUIRED)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 if(FREETYPE_INCLUDE_DIR_ft2build)
     include_directories(${FREETYPE_INCLUDE_DIR_ft2build})
-endif()
-if(APPLE)
-    # Freetype is dynamically loaded by the emulator, however, we link it
-    # on macOS so it gets copied to the bundle by the installation process
-    target_link_libraries(PCBox Freetype::Freetype)
 endif()
 
 find_package(PNG REQUIRED)
@@ -229,48 +205,14 @@ if(MINITRACE)
     target_link_libraries(PCBox minitrace)
 endif()
 
-if(WIN32 OR (APPLE AND CMAKE_MACOSX_BUNDLE))
-    # Copy the binary to the root of the install prefix on Windows and macOS
+if(WIN32)
+    # Copy the binary to the root of the install prefix on Windows
     install(TARGETS PCBox DESTINATION ".")
 else()
     # On Linux we want to copy the binary to the `bin` folder.
     install(TARGETS PCBox)
 endif()
 
-if(APPLE AND CMAKE_MACOSX_BUNDLE)
-    # Ghostscript is dynamically loaded by the emulator. MacPorts and Homebrew
-    # both build it with --disable-compile-inits, so libgs looks for its
-    # PostScript resources at an absolute path from the build machine. Copy the
-    # resources to the bundle; prt_ps.c points Ghostscript at them at runtime.
-    find_library(GHOSTSCRIPT_LIBRARY NAMES gs)
-    if(GHOSTSCRIPT_LIBRARY)
-        # Resolve symlinks (Homebrew links into the Cellar), then go from lib/ to the prefix
-        get_filename_component(GHOSTSCRIPT_REALPATH "${GHOSTSCRIPT_LIBRARY}" REALPATH)
-        get_filename_component(GHOSTSCRIPT_PREFIX "${GHOSTSCRIPT_REALPATH}/../.." ABSOLUTE)
-
-        # The data directory is versioned or unversioned depending on the package
-        file(GLOB GHOSTSCRIPT_INIT
-            "${GHOSTSCRIPT_PREFIX}/share/ghostscript/*/Resource/Init/gs_init.ps"
-            "${GHOSTSCRIPT_PREFIX}/share/ghostscript/Resource/Init/gs_init.ps")
-
-        if(GHOSTSCRIPT_INIT)
-            list(GET GHOSTSCRIPT_INIT 0 GHOSTSCRIPT_INIT)
-            get_filename_component(GHOSTSCRIPT_DATA_DIR "${GHOSTSCRIPT_INIT}/../../.." ABSOLUTE)
-            message(STATUS "Ghostscript resources: ${GHOSTSCRIPT_DATA_DIR}")
-
-            foreach(GHOSTSCRIPT_SUBDIR Resource lib iccprofiles)
-                if(EXISTS "${GHOSTSCRIPT_DATA_DIR}/${GHOSTSCRIPT_SUBDIR}")
-                    install(DIRECTORY "${GHOSTSCRIPT_DATA_DIR}/${GHOSTSCRIPT_SUBDIR}"
-                        DESTINATION "86Box.app/Contents/Resources/ghostscript"
-                        COMPONENT Runtime)
-                endif()
-            endforeach()
-        else()
-            message(WARNING "Ghostscript resources not found under ${GHOSTSCRIPT_PREFIX}; "
-                            "PostScript to PDF conversion will not work in the app bundle")
-        endif()
-    endif()
-endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     include(GNUInstallDirs)
@@ -326,12 +268,6 @@ if(WIN32)
         get_filename_component(CMAKE_INSTALL_PREFIX_ABSOLUTE \${CMAKE_INSTALL_PREFIX} ABSOLUTE)
         fixup_bundle(\"\${CMAKE_INSTALL_PREFIX_ABSOLUTE}/$<TARGET_FILE_NAME:PCBox>\" \"\" \"\")"
     COMPONENT Runtime)
-elseif(APPLE AND NOT QT)
-    install(CODE "
-        include(BundleUtilities)
-        get_filename_component(CMAKE_INSTALL_PREFIX_ABSOLUTE \${CMAKE_INSTALL_PREFIX} ABSOLUTE)
-        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX_ABSOLUTE}/PCBox.app\" \"\" \"\")"
-    COMPONENT Runtime)
 endif()
 
 # Install the PDB file on Windows builds
@@ -366,9 +302,6 @@ add_subdirectory(sound)
 add_subdirectory(utils)
 add_subdirectory(video)
 
-if (APPLE)
-    add_subdirectory(mac)
-endif()
 
 add_subdirectory(osd)
 

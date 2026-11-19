@@ -24,12 +24,6 @@ set(X86_64_MARCH "x86-64" CACHE STRING "-march for x86-64 builds")
 
 if(ARCH STREQUAL "x86_64")
     add_compile_options(-m64 "$<$<NOT:$<CONFIG:Optimized>>:-march=x86-64>" -msse2 -mfpmath=sse -mstackrealign)
-elseif(ARCH STREQUAL "arm64")
-    if(APPLE)
-        add_compile_options("$<$<NOT:$<CONFIG:Optimized>>:-march=armv8.5-a+simd>")
-    else()
-        add_compile_options("$<$<NOT:$<CONFIG:Optimized>>:-march=armv8-a>")
-    endif()
 elseif(ARCH STREQUAL "loongarch64")
     # LSX is a hard requirement for the new dynarec on LoongArch64
     # (codegen_backend_loongarch64_defs.h gates on __loongarch_sx).

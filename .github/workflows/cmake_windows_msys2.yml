@@ -64,7 +64,7 @@ jobs:
 
   windows:
 
-    name: "${{ matrix.ui.name }}, ${{ matrix.build.name }}, ${{ matrix.dynarec.name }}, ${{ matrix.environment.msystem }}"
+    name: "${{ matrix.ui.name }}, ${{ matrix.build.name }}, ${{ matrix.environment.msystem }}"
 
     if: github.event.action != 'closed'
 
@@ -86,6 +86,7 @@ jobs:
             slug: -Dev-Debug
             manual: true
           - name: Dev
+            manual: true
             preset: development
             slug: -Dev
         ui:
@@ -121,9 +122,12 @@ jobs:
             prefix: mingw-w64-ucrt-x86_64
             slug: "-64"
             runner: windows-2022
-          - msystem: CLANGARM64
-            slug: -arm64
-            runner: windows-11-arm
+
+        exclude:
+          - build:
+              manual: ${{ !inputs.full_matrix || 'never' }}
+          - ui:
+              manual: ${{ !inputs.full_matrix || 'never' }}
 
     steps:
       - name: Checkout repository

@@ -6,7 +6,7 @@
  *
  *          This file is part of the 86Box distribution.
  *
- *          Implementation of Socket 370 (PGA370) machines.
+ *          Implementation of Socket 478 (mPGA478) machines.
  *
  * Authors: Miran Grca, <mgrca8@gmail.com>
  *

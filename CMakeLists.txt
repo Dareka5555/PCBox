@@ -45,6 +45,10 @@ project(PCBox
     HOMEPAGE_URL "https://pcbox-emu.xyz/"
     LANGUAGES C CXX)
 
+if(APPLE)
+    message(FATAL_ERROR "This PCBox fork does not support macOS.")
+endif()
+
 if (NOT (CMAKE_SIZEOF_VOID_P STREQUAL "8"))
     message(FATAL_ERROR "Only 64-bit builds are supported.")
 endif()
@@ -97,10 +101,6 @@ else()
     set(PREFER_STATIC OFF)
 endif()
 
-if(APPLE)
-    option(CMAKE_MACOSX_BUNDLE "Build a macOS bundle (.app)" ON)
-endif()
-
 if(NOT NO_STATIC_OPTION)
     if(PREFER_STATIC)
         option(STATIC_BUILD "Static build" ON)
@@ -114,6 +114,9 @@ if(HAIKU)
 endif()
 
 include(DetectTargetArch)
+if(ARCH STREQUAL "arm64")
+    message(FATAL_ERROR "This PCBox fork does not support ARM hosts.")
+endif()
 include(CompilerFlags)
 
 # Optional features
@@ -208,9 +211,7 @@ if(WIN32 AND NOT CMAKE_WIN32_EXECUTABLE)
 endif()
 
 if(GDBSTUB)
-    if(NOT (ARCH STREQUAL "arm64"))
-        set(NEW_DYNAREC OFF CACHE BOOL "Use the PCem v15 (\"new\") dynamic recompiler" OFF)
-    endif()
+    set(NEW_DYNAREC OFF CACHE BOOL "Use the PCem v15 (\"new\") dynamic recompiler" OFF)
     set(DYNAREC OFF CACHE BOOL "Dynamic Recompiler" FORCE)
 endif()
 
@@ -240,9 +241,6 @@ option(POWERVR_PCX_DEV "PowerVR PCX: developer/test settings in the device" OFF)
 # Ditto but for Qt
 if(QT)
     option(USE_QT6 "Use Qt6 instead of Qt5" OFF)
-    if(APPLE)
-        option(MOLTENVK "Use MoltenVK libraries for Vulkan support on macOS. Requires a Vulkan-enabled QT." OFF)
-    endif()
 
     option(LIBRASHADER "Build with librashader support" ON)
 

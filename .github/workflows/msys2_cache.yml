@@ -40,8 +40,6 @@ jobs:
         include:
           - msystem: UCRT64
             runner: windows-2022
-          - msystem: CLANGARM64
-            runner: windows-11-arm
 
     steps:
       - name: Checkout repository
