@@ -538,6 +538,24 @@ config_ask_unsupported(void)
     return ui_confirm_unsupported_hardware(config_unsupported_list, config_unsupported_count, config_unsupported_machine);
 }
 
+/* Select a CPU supported by the current board, including for a new VM. */
+static void
+config_default_cpu(void)
+{
+    for (const cpu_family_t *family = cpu_families; family->package; family++) {
+        if (!cpu_family_is_eligible(family, machine))
+            continue;
+
+        cpu_f = (cpu_family_t *) family;
+        for (cpu = 0; !cpu_is_eligible(cpu_f, cpu, machine); cpu++)
+            ;
+        cpu_s = (CPU *) &cpu_f->cpus[cpu];
+        return;
+    }
+
+    fatal("Configuration: No eligible CPU families for the selected machine\n");
+}
+
 static void
 load_machine(void)
 {
@@ -687,37 +705,20 @@ load_machine(void)
         if (!cpu_f->cpus[cpu].cpu_type)
             /* if no exact match was found, use closest matching faster CPU or fastest eligible CPU. */
             cpu = MIN(i, c);
+        cpu_s = (CPU *) &cpu_f->cpus[cpu];
     } else {
-        /* Default, find first eligible family. */
-        c = 0;
-        while (!cpu_family_is_eligible(&cpu_families[c], machine)) {
-            if (cpu_families[c++].package == 0) {
-                /* End of list. */
-                fatal("Configuration: No eligible CPU families for the selected machine\n");
-                return;
-            }
-        }
-        cpu_f = (cpu_family_t *) &cpu_families[c];
-
-        /* Find first eligible CPU in that family. */
-        cpu = 0;
-        while (!cpu_is_eligible(cpu_f, cpu, machine)) {
-            if (cpu_f->cpus[cpu++].cpu_type == 0) {
-                /* End of list. */
-                cpu = 0;
-                break;
-            }
-        }
+        config_default_cpu();
     }
-    cpu_s = (CPU *) &cpu_f->cpus[cpu];
 
     cpu_waitstates = ini_section_get_int(cat, "cpu_waitstates", 0);
 
     p        = ini_section_get_string(cat, "fpu_type", "none");
     fpu_type = fpu_get_type(cpu_f, cpu, p);
 
-    mem_size = ini_section_get_int(cat, "mem_size", 64);
+    mem_size = ini_section_get_int(cat, "mem_size", machine_get_min_ram(machine));
 
+    if (mem_size < machine_get_min_ram(machine))
+        mem_size = machine_get_min_ram(machine);
     if (mem_size > machine_get_max_ram(machine))
         mem_size = machine_get_max_ram(machine);
 
@@ -3249,14 +3250,13 @@ config_load(void)
     if (config == NULL) {
         config = ini_new();
 
-        cpu_f = (cpu_family_t *) &cpu_families[0];
-        cpu   = 0;
+        machine = 0;
+        config_default_cpu();
 
         kbd_req_capture      = 0;
         hide_status_bar      = 0;
         hide_tool_bar        = 0;
         scale                = 1;
-        machine              = machine_get_machine_from_internal_name("ibmpc");
         dpi_scale            = 1;
         force_constant_mouse = 0;
         fast_forward_on_start = fast_forward_new_machines;
@@ -3265,13 +3265,13 @@ config_load(void)
         cpu_debug_regs_486       = 0;
 
         fpu_type               = fpu_get_type(cpu_f, cpu, "none");
-        gfxcard[0]             = video_get_video_from_internal_name("cga");
+        gfxcard[0]             = video_get_video_from_internal_name("s3_trio64_pci");
         vid_api                = plat_vidapi("default");
         vid_resize             = 0;
         video_fullscreen_scale = 1;
         time_sync              = TIME_SYNC_ENABLED;
 
-        keyboard_type          = KEYBOARD_TYPE_PC_XT;
+        keyboard_type          = KEYBOARD_TYPE_PS2;
 
         for (int i = 0; i < HDC_MAX; i++)
             hdc_current[i]         = hdc_get_from_internal_name("none");
@@ -3300,7 +3300,7 @@ config_load(void)
 
         /* Unmute the CD audio on the first CD-ROM drive. */
         cdrom[0].sound_on = 1;
-        mem_size          = 64;
+        mem_size          = machine_get_min_ram(machine);
         isartc_type       = 0;
         isa_expansion_type = 0;
         gameport_card_type = GAMEPORT_CARD_AUTO;

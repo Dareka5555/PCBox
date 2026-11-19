@@ -28,7 +28,6 @@ on:
       - "**/CMakeLists.txt"
       - "CMakePresets.json"
       - .ci/**
-      - .github/actions/setup-macports/**
       - .github/workflows/pr_builds.yml
       - vcpkg.json
       - "!**/Makefile*"
