@@ -148,7 +148,15 @@ jobs:
           -D USE_QT6=${{ matrix.ui.qt6 }}
 
       - name: Build
-        run: cmake --build build
+        run: |
+          set -o pipefail
+          if ! cmake --build build 2>&1 | tee build/ci-build.log; then
+            # Keep key diagnostics visible in the job annotations as well as the log.
+            grep -E 'FAILED:|undefined reference|error:|CMake Error|[Kk]illed' build/ci-build.log | head -n 15 | while IFS= read -r line; do
+              printf '::error::%s\n' "${line//%/%25}"
+            done || true
+            exit 1
+          fi
 
       - name: Generate package
         run: cmake --install build

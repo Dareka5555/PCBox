@@ -6,7 +6,7 @@ It is licensed under GPLv2 or later.
 
 This fork targets Socket 478 machines. The current reference board is the
 QDI PlatiniX 2 (Intel i845 / ICH2); it requires a BIOS ROM at
-`roms/machines/platinix2/P2_V23.BIN` under a configured ROM search root. ROMs
+`machines/platinix2/P2_V23.BIN` inside a configured `roms` directory. ROMs
 are not bundled. Intel 865 support is not implemented yet.
 
 GitHub Actions builds and packages Windows (MSYS2 UCRT64) and Linux (x86-64).

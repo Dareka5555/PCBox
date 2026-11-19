@@ -170,7 +170,14 @@ jobs:
 
       - name: Build
         run: |
-          cmake --build build
+          set -o pipefail
+          if ! cmake --build build 2>&1 | tee build/ci-build.log; then
+            # Keep key diagnostics visible in the job annotations as well as the log.
+            grep -E 'FAILED:|undefined reference|error:|CMake Error|[Kk]illed' build/ci-build.log | head -n 15 | while IFS= read -r line; do
+              printf '::error::%s\n' "${line//%/%25}"
+            done || true
+            exit 1
+          fi
 
       # Pinned releases, checked against their SHA-256 digests. They are
       # AppImages themselves, extracted instead of mounted, as the runners
