@@ -26,10 +26,6 @@
 #    include <sys/disklabel.h>
 #endif
 
-#ifdef __APPLE__
-#    include "macOSXGlue.h"
-#endif
-
 #ifdef USE_SDL2_LIB
 #include <SDL.h>
 #else
@@ -118,7 +114,6 @@ plat_get_temp_dir(char *outbuf, uint8_t len)
 void
 plat_init_rom_paths(void)
 {
-#ifndef __APPLE__
     const char *xdg_data_home = getenv("XDG_DATA_HOME");
     if (xdg_data_home) {
         char   xdg_rom_path[TMP_PATH_BUFSIZE] = { 0 };
@@ -184,17 +179,11 @@ plat_init_rom_paths(void)
         rom_add_path("/usr/local/share/" EMU_NAME "/roms/");
         rom_add_path("/usr/share/" EMU_NAME "/roms/");
     }
-#else
-    char default_rom_path[TMP_PATH_BUFSIZE] = { 0 };
-    getDefaultROMPath(default_rom_path);
-    rom_add_path(default_rom_path);
-#endif
 }
 
 void
 plat_init_asset_paths(void)
 {
-#ifndef __APPLE__
     const char *xdg_data_home = getenv("XDG_DATA_HOME");
     if (xdg_data_home) {
         char   xdg_asset_path[TMP_PATH_BUFSIZE] = { 0 };
@@ -260,11 +249,6 @@ plat_init_asset_paths(void)
         asset_add_path("/usr/local/share/" EMU_NAME "/assets/");
         asset_add_path("/usr/share/" EMU_NAME "/assets/");
     }
-#else
-    char default_asset_path[TMP_PATH_BUFSIZE] = { 0 };
-    getDefaultROMPath(default_asset_path);
-    asset_add_path(default_asset_path);
-#endif
 }
 #undef TMP_PATH_BUFSIZE
 

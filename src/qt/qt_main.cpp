@@ -85,7 +85,6 @@ extern "C" {
 #include "qt_mainwindow.hpp"
 #include "qt_preferences.hpp"
 #include "qt_settings.hpp"
-#include "cocoa_mouse.hpp"
 #include "qt_styleoverride.hpp"
 #include "qt_unixmanagerfilter.hpp"
 #include "qt_util.hpp"
@@ -551,10 +550,6 @@ main(int argc, char *argv[])
     Q_INIT_RESOURCE(qt_resources);
     Q_INIT_RESOURCE(qt_translations);
 
-#ifdef __APPLE__
-    CocoaEventFilter cocoafilter;
-    app.installNativeEventFilter(&cocoafilter);
-#endif
     elapsed_timer.start();
 
     for (size_t i = 0; i < sizeof(scancode_map) / sizeof(scancode_map[0]); i++)

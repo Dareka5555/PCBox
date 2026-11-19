@@ -65,16 +65,8 @@ AppDir:
       python3 .ci/trim_icu_data.py --cc "$libdir-gcc" "$icudata" || echo "Failed to trim $icudata"
     done
   after_runtime: |
-    case "$arch_appimage" in
-      x86_64)
-        mkdir -p archive_tmp/runtime/compat/lib64
-        ln -sf ../usr/lib64/ld-linux-x86-64.so.2 archive_tmp/runtime/compat/lib64/ld-linux-x86-64.so.2
-        ;;
-      aarch64)
-        mkdir -p archive_tmp/runtime/compat/lib
-        ln -sf ../usr/lib/ld-linux-aarch64.so.1 archive_tmp/runtime/compat/lib/ld-linux-aarch64.so.1
-        ;;
-    esac
+    mkdir -p archive_tmp/runtime/compat/lib64
+    ln -sf ../usr/lib64/ld-linux-x86-64.so.2 archive_tmp/runtime/compat/lib64/ld-linux-x86-64.so.2
     ln -sf /usr/lib/libvulkan.so.1 archive_tmp/usr/lib/libvulkan.so
     ln -sf "/usr/lib/$libdir/libvulkan.so.1" "archive_tmp/usr/lib/$libdir/libvulkan.so"
     ln -sf /usr/lib64/libvulkan.so.1 "archive_tmp/lib/$arch_appimage/libvulkan.so"
@@ -129,7 +121,7 @@ AppDir:
     exclude:
     - etc
     - usr/[!ls]* # * except lib, local, share
-    - usr/lib/[!almx]* # * except aarch64-linux-gnu, lib*, mdsx.so, x86_64-linux-gnu
+    - usr/lib/[!lmx]* # * except lib*, mdsx.so, x86_64-linux-gnu
     - usr/lib/l[!i]* # l* except lib*
     - usr/lib/m[!d]* # m* except mdsx.so
     - usr/lib/*/*.a # produced by library compilation

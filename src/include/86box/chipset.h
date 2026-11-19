@@ -41,7 +41,6 @@ extern const device_t ali6117d_device;
 
 /* AMD */
 extern const device_t amd640_device;
-extern const device_t amd751_device;
 
 /* ASUS */
 extern const device_t asus48625_device;
@@ -65,7 +64,6 @@ extern const device_t scat_device;
 extern const device_t scat_4_device;
 extern const device_t scat_sx_device;
 extern const device_t cs8220_device;
-extern const device_t cs8230_device;
 extern const device_t cs4031_device;
 
 /* G2 */
@@ -337,7 +335,6 @@ extern const device_t philips_device;
 extern const device_t sanyo_device;
 
 /* SiS */
-extern const device_t rabbit_device;
 extern const device_t sis_85c401_device;
 extern const device_t sis_85c411_device;
 extern void           sis_85c411_set_board_id(const char *mfg, uint16_t product, uint8_t rev);
@@ -360,14 +357,6 @@ extern const device_t sis_620_device;
 extern const device_t sis_5591_device;
 extern const device_t sis_5600_1997_device;
 extern const device_t sis_5600_device;
-
-/* ST */
-extern const device_t stpc_client_device;
-extern const device_t stpc_consumer2_device;
-extern const device_t stpc_elite_device;
-extern const device_t stpc_atlas_device;
-extern const device_t stpc_serial_device;
-extern const device_t stpc_lpt_device;
 
 /* Symphony */
 extern const device_t sl82c461_device;

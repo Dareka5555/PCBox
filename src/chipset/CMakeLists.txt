@@ -20,7 +20,6 @@ add_library(chipset OBJECT
     acc2036.c
     acc2168.c
     cs8220.c
-    cs8230.c
     cs5530.c
     cyrix_gxm.c
     ali1429.c
@@ -31,8 +30,6 @@ add_library(chipset OBJECT
     ali1543.c
     ali1621.c
     ali6117.c
-    ali1409.c
-    amd751.c
     asus48625.c
     headland.c
     ims8848.c
@@ -91,7 +88,6 @@ add_library(chipset OBJECT
     sanyo.c
     scamp.c
     scat.c
-    sis_85c310.c
     sis_85c411.c
     sis_85c4xx.c
     sis_85c496.c
@@ -116,7 +112,6 @@ add_library(chipset OBJECT
     sis_5595_pmu.c
     sis_55xx.c
     sl82c461.c
-    stpc.c
     via_vt82c49x.c
     via_vt82c505.c
     umc_8886.c
